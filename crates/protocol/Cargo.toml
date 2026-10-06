@@ -1,9 +1,9 @@
 [package]
-name = "chatb-protocol"
+name = "bitchat-desktop-protocol"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 publish.workspace = true
-description = "Reserved shared Bitchat protocol implementation for ChatB"
+description = "Reserved shared Bitchat protocol implementation for BitChat Desktop"

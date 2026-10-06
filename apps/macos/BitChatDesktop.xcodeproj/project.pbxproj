@@ -59,7 +59,7 @@
 /* Begin PBXFileReference section */
 		03C57F452B55FD0FD8F51421 /* bitchatTests_macOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bitchatTests_macOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		61F92EBA29C47C0FCC482F1F /* bitchatShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = bitchatShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		8F3A7C058C2C8E1A06C8CF8B /* ChatB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatB.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F3A7C058C2C8E1A06C8CF8B /* BitChat Desktop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BitChat Desktop.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		96D0D41CA19EE5A772AA8434 /* bitchat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bitchat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6F183FC2E948783006A9046 /* tor-nolzma.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = "tor-nolzma.xcframework"; path = "localPackages/Tor/Frameworks/tor-nolzma.xcframework"; sourceTree = "<group>"; };
 		C0DB1DE27F0AAB5092663E8E /* bitchatTests_iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bitchatTests_iOS.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,7 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				96D0D41CA19EE5A772AA8434 /* bitchat.app */,
-				8F3A7C058C2C8E1A06C8CF8B /* ChatB.app */,
+				8F3A7C058C2C8E1A06C8CF8B /* BitChat Desktop.app */,
 				61F92EBA29C47C0FCC482F1F /* bitchatShareExtension.appex */,
 				C0DB1DE27F0AAB5092663E8E /* bitchatTests_iOS.xctest */,
 				03C57F452B55FD0FD8F51421 /* bitchatTests_macOS.xctest */,
@@ -231,7 +231,7 @@
 				A6BCF9492F809550001CF9B9 /* BitFoundation */,
 			);
 			productName = bitchat_macOS;
-			productReference = 8F3A7C058C2C8E1A06C8CF8B /* ChatB.app */;
+			productReference = 8F3A7C058C2C8E1A06C8CF8B /* BitChat Desktop.app */;
 			productType = "com.apple.product-type.application";
 		};
 		47FF23248747DD7CB666CB91 /* bitchatTests_macOS */ = {
@@ -517,7 +517,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).tests";
 				SDKROOT = macosx;
 				SWIFT_VERSION = "$(SWIFT_VERSION)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatB.app/Contents/MacOS/ChatB";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitChat Desktop.app/Contents/MacOS/BitChat Desktop";
 			};
 			name = Release;
 		};
@@ -604,7 +604,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER).tests";
 				SDKROOT = macosx;
 				SWIFT_VERSION = "$(SWIFT_VERSION)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChatB.app/Contents/MacOS/ChatB";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitChat Desktop.app/Contents/MacOS/BitChat Desktop";
 			};
 			name = Debug;
 		};
@@ -656,7 +656,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = bitchat/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ChatB;
+				INFOPLIST_KEY_CFBundleDisplayName = "BitChat Desktop";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -664,7 +664,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
-				PRODUCT_NAME = ChatB;
+				PRODUCT_NAME = "BitChat Desktop";
 				SWIFT_MODULE_NAME = bitchat;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
@@ -749,7 +749,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_PREVIEWS = NO;
 				INFOPLIST_FILE = bitchat/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = ChatB;
+				INFOPLIST_KEY_CFBundleDisplayName = "BitChat Desktop";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -757,7 +757,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = "$(MACOSX_DEPLOYMENT_TARGET)";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_BUNDLE_IDENTIFIER)";
-				PRODUCT_NAME = ChatB;
+				PRODUCT_NAME = "BitChat Desktop";
 				SWIFT_MODULE_NAME = bitchat;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;

@@ -1,4 +1,4 @@
-name: ChatB CI
+name: BitChat Desktop CI
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: chatb-ci-${{ github.ref }}
+  group: bitchat-desktop-ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -61,7 +61,7 @@ jobs:
       - run: swift test --package-path apps/macos/localPackages/${{ matrix.package }}
 
   macos:
-    name: Build ChatB macOS Release
+    name: Build BitChat Desktop macOS Release
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
@@ -71,8 +71,8 @@ jobs:
       - name: Build unsigned app
         run: |
           set -o pipefail
-          xcodebuild -project apps/macos/ChatB.xcodeproj \
-            -scheme "ChatB (macOS)" -configuration Release \
+          xcodebuild -project apps/macos/BitChatDesktop.xcodeproj \
+            -scheme "BitChat Desktop (macOS)" -configuration Release \
             -destination 'generic/platform=macOS' \
             -derivedDataPath apps/macos/.DerivedData \
             CODE_SIGNING_ALLOWED=NO build

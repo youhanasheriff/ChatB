@@ -1,4 +1,4 @@
-title = "ChatB secret scanning"
+title = "BitChat Desktop secret scanning"
 
 [extend]
 useDefault = true

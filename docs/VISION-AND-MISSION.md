@@ -1,4 +1,4 @@
-# ChatB: Vision and Mission
+# BitChat Desktop: Vision and Mission
 
 > Small native desktop apps. One compatible network. User-controlled communication.
 
@@ -6,7 +6,7 @@
 
 Make Bitchat-compatible communication a dependable part of everyday desktop computing: a small, accessible, open-source application for macOS, Windows, and Linux that helps people communicate nearby without internet access and reach compatible peers through internet relays when connectivity is available.
 
-A person should be able to install ChatB, understand which transport is available, and communicate with compatible Bitchat users without needing a ChatB account, phone number, or company-operated messaging server.
+A person should be able to install BitChat Desktop, understand which transport is available, and communicate with compatible Bitchat users without needing a BitChat Desktop account, phone number, or company-operated messaging server.
 
 “Small” means the complete usable installation, including any dependencies missing from the user's computer. It also means restrained memory use, background activity, and battery consumption. Size reductions must preserve correctness, accessibility, and the stated privacy behavior.
 
@@ -23,20 +23,20 @@ We will:
 5. **Respect user control.** Make public/private messaging, local/internet transport, retention, notifications, and Tor behavior understandable and controllable.
 6. **Work in the open.** Maintain public source, reproducible build instructions, visible limitations, issue tracking, and a reviewable development roadmap.
 
-## Who ChatB serves
+## Who BitChat Desktop serves
 
 - Bitchat users who want a desktop companion on a supported computer.
 - People communicating nearby when internet access is absent or unreliable.
 - Users who value native desktop interaction and a small installation.
 - Developers and researchers who need inspectable compatibility tests and implementations.
 
-Bluetooth capabilities vary by hardware and operating system. ChatB must identify unsupported configurations and explain their limitations rather than imply that every computer can participate identically.
+Bluetooth capabilities vary by hardware and operating system. BitChat Desktop must identify unsupported configurations and explain their limitations rather than imply that every computer can participate identically.
 
 ## Product commitments
 
 ### Interoperability before new protocol invention
 
-ChatB follows [Bitchat](https://github.com/permissionlesstech/bitchat) as an independent desktop project. Branding, application identifiers, and native interaction can differ; established wire identifiers and cryptographic formats must remain compatible with the declared upstream target.
+BitChat Desktop follows [Bitchat](https://github.com/permissionlesstech/bitchat) as an independent desktop project. Branding, application identifiers, and native interaction can differ; established wire identifiers and cryptographic formats must remain compatible with the declared upstream target.
 
 A feature declaration or capability bit in source code is not proof that a feature ships or interoperates. Compatibility claims must identify the tested client versions, platforms, and supported operations.
 
@@ -48,7 +48,7 @@ Encrypted content does not hide all metadata. Bluetooth announcements, radio act
 
 Tor behavior is part of the privacy contract where internet transport uses it. Reducing size must not silently remove Tor or turn protected connections into direct connections.
 
-No advertising, behavioral tracking, required ChatB cloud account, or default message-content telemetry is planned. Any future optional diagnostics must have explicit consent, narrow data collection, and a clear deletion policy.
+No advertising, behavioral tracking, required BitChat Desktop cloud account, or default message-content telemetry is planned. Any future optional diagnostics must have explicit consent, narrow data collection, and a clear deletion policy.
 
 ### Reliable desktop behavior
 
@@ -58,7 +58,7 @@ An application that looks complete but cannot reconnect, retain the intended sta
 
 ### Open ownership and maintenance
 
-ChatB is a personal open-source project maintained under [youhanasheriff/ChatB](https://github.com/youhanasheriff/ChatB). It retains Bitchat's history and attribution and uses the [Unlicense](../LICENSE); dependencies retain their own licenses.
+BitChat Desktop is a personal open-source project maintained under [youhanasheriff/bitchat-desktop](https://github.com/youhanasheriff/bitchat-desktop). It retains Bitchat's history and attribution and uses the [Unlicense](../LICENSE); dependencies retain their own licenses.
 
 The project must be buildable without this laptop's company-specific hooks, private infrastructure, or inherited signing identity. Release credentials remain outside source control.
 
@@ -79,7 +79,7 @@ GTK4 is an explicit Linux dependency. Linux does not provide one UI toolkit buil
 
 ## Scope boundaries
 
-The selected products are macOS, Windows, and Linux desktop applications. Inherited iOS code remains useful implementation material, and iOS/Android Bitchat clients are interoperability peers. New ChatB mobile apps and a browser client are outside the initial scope.
+The selected products are macOS, Windows, and Linux desktop applications. Inherited iOS code remains useful implementation material, and iOS/Android Bitchat clients are interoperability peers. New BitChat Desktop mobile apps and a browser client are outside the initial scope.
 
 The initial plan does not include Electron, Flutter, Tauri, a custom messaging server, a new wallet, mandatory analytics, or a new incompatible network. Additional transports and experimental upstream protocols require separate evidence and prioritization.
 

@@ -19,7 +19,7 @@ struct PanicWipeBlockedBanner: View {
     private var message: String {
         String(
             localized: "content.banner.panic_blocked",
-            defaultValue: "wipe incomplete — some data may remain. quit and reopen bitchat to retry.",
+            defaultValue: "wipe incomplete — some data may remain. quit and reopen BitChat Desktop to retry.",
             comment: "Banner shown when a panic wipe did not fully commit; relaunching the app retries the wipe"
         )
     }

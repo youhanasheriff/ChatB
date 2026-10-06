@@ -1,6 +1,6 @@
-# ChatB for Windows
+# BitChat Desktop for Windows
 
-Planned native Win32 interface with Windows Bluetooth/WinRT, secure storage, notifications, and shared ChatB core integration.
+Planned native Win32 interface with Windows Bluetooth/WinRT, secure storage, notifications, and shared BitChat Desktop core integration.
 
 This is a directory scaffold, not an implemented or runnable Windows client. Check peripheral/GATT-server support on real hardware before claiming full mesh compatibility. Windows App SDK/WinUI is not a required UI dependency in the proposed architecture.
 

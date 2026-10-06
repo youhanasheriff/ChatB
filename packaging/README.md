@@ -1,6 +1,6 @@
 # Packaging
 
-There are no ChatB release artifacts yet.
+There are no BitChat Desktop release artifacts yet.
 
 Planned outputs:
 - macOS: separate arm64 and x86_64 app archives where supported; optional universal build.

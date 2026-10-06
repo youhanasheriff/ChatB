@@ -11,7 +11,7 @@ import UserNotifications
 
 @main
 struct BitchatApp: App {
-    static let bundleID = Bundle.main.bundleIdentifier ?? "io.github.youhanasheriff.chatb"
+    static let bundleID = Bundle.main.bundleIdentifier ?? "io.github.youhanasheriff.bitchatdesktop"
     static let groupID = "group.\(bundleID)"
 
     @StateObject private var runtime: AppRuntime
@@ -29,7 +29,7 @@ struct BitchatApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("ChatB") {
+        WindowGroup("BitChat Desktop") {
             ContentView()
                 .environment(\.appTheme, AppTheme(rawValue: appThemeRawValue) ?? .matrix)
                 .environmentObject(runtime.publicChatModel)

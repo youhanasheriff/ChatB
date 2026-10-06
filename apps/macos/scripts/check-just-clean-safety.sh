@@ -34,7 +34,7 @@ if ! grep -Fxq 'derived_data := ".DerivedData"' Justfile; then
     exit 1
 fi
 
-clean_forbidden='git[[:space:]]+(checkout|restore|reset|clean)|(^|[[:space:]])(cp|mv)([[:space:]]|$)|(bitchat|ChatB)\.xcodeproj|project\.pbxproj|Info\.plist|LaunchScreen|project\.yml|Configs/'
+clean_forbidden='git[[:space:]]+(checkout|restore|reset|clean)|(^|[[:space:]])(cp|mv)([[:space:]]|$)|(bitchat|BitChatDesktop)\.xcodeproj|project\.pbxproj|Info\.plist|LaunchScreen|project\.yml|Configs/'
 if grep -Eiq "$clean_forbidden" <<<"$clean_recipe"; then
     echo "Unsafe source/configuration mutation found in the clean recipe:" >&2
     grep -Ein "$clean_forbidden" <<<"$clean_recipe" >&2
@@ -60,7 +60,7 @@ if [[ $clean_recipe != "$expected_clean_recipe" ]]; then
     exit 1
 fi
 
-file_forbidden='git[[:space:]]+(checkout|restore|reset|clean)|rm[[:space:]]+-rf[^#]*((bitchat|ChatB)\.xcodeproj|bitchat/|Configs/)|LaunchScreen\.storyboard\.ios|project\.pbxproj\.backup|Info\.plist\.backup'
+file_forbidden='git[[:space:]]+(checkout|restore|reset|clean)|rm[[:space:]]+-rf[^#]*((bitchat|BitChatDesktop)\.xcodeproj|bitchat/|Configs/)|LaunchScreen\.storyboard\.ios|project\.pbxproj\.backup|Info\.plist\.backup'
 if grep -Ein "$file_forbidden" Justfile; then
     echo "Unsafe tracked-file recovery/deletion logic found in Justfile" >&2
     exit 1

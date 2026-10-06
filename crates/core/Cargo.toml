@@ -1,12 +1,12 @@
 [package]
-name = "chatb-core"
+name = "bitchat-desktop-core"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 publish.workspace = true
-description = "Reserved shared ChatB mesh and application logic"
+description = "Reserved shared BitChat Desktop mesh and application logic"
 
 [dependencies]
-chatb-protocol.workspace = true
+bitchat-desktop-protocol.workspace = true

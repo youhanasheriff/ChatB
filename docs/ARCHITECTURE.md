@@ -1,10 +1,10 @@
-# ChatB desktop architecture
+# BitChat Desktop desktop architecture
 
 The [vision and mission](VISION-AND-MISSION.md) define the product commitments. The [roadmap](ROADMAP.md) tracks implementation and acceptance work across all three platforms.
 
 ## Targets and status
 
-ChatB targets native macOS, Windows, and Linux interfaces with minimum practical installation size. The working source starting point is the inherited macOS Swift client. Windows/Linux and the Rust crates are scaffolds, not complete clients.
+BitChat Desktop targets native macOS, Windows, and Linux interfaces with minimum practical installation size. The working source starting point is the inherited macOS Swift client. Windows/Linux and the Rust crates are scaffolds, not complete clients.
 
 ## Boundaries
 
@@ -31,6 +31,6 @@ The Rust core is a planned port; it cannot import the existing Swift protocol im
 
 ## Compatibility and footprint
 
-Preserve Bitchat wire semantics independently from ChatB branding. Generic BLE or Nostr libraries alone do not establish interoperability.
+Preserve Bitchat wire semantics independently from BitChat Desktop branding. Generic BLE or Nostr libraries alone do not establish interoperability.
 
 GTK/webview/shared runtime dependencies count when missing on the target machine. Preserve Tor behavior when claiming upstream privacy parity. Compare final releases with the same supported features rather than ranking incomplete UI probes.

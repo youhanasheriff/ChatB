@@ -1,13 +1,13 @@
 # Upstream provenance
 
-ChatB follows [permissionlesstech/bitchat](https://github.com/permissionlesstech/bitchat) as an independently maintained desktop project.
+BitChat Desktop follows [permissionlesstech/bitchat](https://github.com/permissionlesstech/bitchat) as an independently maintained desktop project.
 
 The initial imported source is commit `5e9287fae1e5fea80ca741d4ea669829dc16f144`. Git history is retained through a public fork, and the local `upstream` remote points to Bitchat.
 
 ## Initial changes
 
 - Moved the Apple implementation and supporting packages into `apps/macos`.
-- Renamed the Xcode project, macOS scheme, and macOS application product to ChatB.
+- Renamed the Xcode project, macOS scheme, and macOS application product to BitChat Desktop.
 - Set a separate bundle/app-group identity and removed the upstream signing team.
 - Retained internal Swift module names and wire identifiers to limit compatibility changes.
 - Added a Rust workspace and directory scaffolds for native Windows/Linux clients.
@@ -25,4 +25,4 @@ Keep protocol identifiers, signature rules, envelopes, and session behavior alig
 
 The initial source uses the Unlicense, retained verbatim at the repository root. Existing author/source notices remain. Arti and other dependencies retain their respective licenses and provenance. Redistribution requires carrying the relevant dependency notices.
 
-ChatB does not claim to be an official Bitchat distribution.
+BitChat Desktop does not claim to be an official Bitchat distribution.

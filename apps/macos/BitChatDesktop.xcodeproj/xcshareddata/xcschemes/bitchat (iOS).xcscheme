@@ -17,7 +17,7 @@
                BlueprintIdentifier = "57CA17A36A2532A6CFF367BB"
                BuildableName = "bitchatShareExtension.appex"
                BlueprintName = "bitchatShareExtension"
-               ReferencedContainer = "container:ChatB.xcodeproj">
+               ReferencedContainer = "container:BitChatDesktop.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -31,7 +31,7 @@
                BlueprintIdentifier = "AF077EA0474EDEDE2C72716C"
                BuildableName = "bitchat.app"
                BlueprintName = "bitchat_iOS"
-               ReferencedContainer = "container:ChatB.xcodeproj">
+               ReferencedContainer = "container:BitChatDesktop.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -49,7 +49,7 @@
             BlueprintIdentifier = "AF077EA0474EDEDE2C72716C"
             BuildableName = "bitchat.app"
             BlueprintName = "bitchat_iOS"
-            ReferencedContainer = "container:ChatB.xcodeproj">
+            ReferencedContainer = "container:BitChatDesktop.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <CodeCoverageTargets>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "AF077EA0474EDEDE2C72716C"
             BuildableName = "bitchat.app"
             BlueprintName = "bitchat_iOS"
-            ReferencedContainer = "container:ChatB.xcodeproj">
+            ReferencedContainer = "container:BitChatDesktop.xcodeproj">
          </BuildableReference>
       </CodeCoverageTargets>
       <Testables>
@@ -71,7 +71,7 @@
                BlueprintIdentifier = "6CB97DF2EA57234CB3E563B8"
                BuildableName = "bitchatTests_iOS.xctest"
                BlueprintName = "bitchatTests_iOS"
-               ReferencedContainer = "container:ChatB.xcodeproj">
+               ReferencedContainer = "container:BitChatDesktop.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -93,7 +93,7 @@
             BlueprintIdentifier = "AF077EA0474EDEDE2C72716C"
             BuildableName = "bitchat.app"
             BlueprintName = "bitchat_iOS"
-            ReferencedContainer = "container:ChatB.xcodeproj">
+            ReferencedContainer = "container:BitChatDesktop.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -117,7 +117,7 @@
             BlueprintIdentifier = "AF077EA0474EDEDE2C72716C"
             BuildableName = "bitchat.app"
             BlueprintName = "bitchat_iOS"
-            ReferencedContainer = "container:ChatB.xcodeproj">
+            ReferencedContainer = "container:BitChatDesktop.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

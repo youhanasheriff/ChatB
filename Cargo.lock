@@ -3,19 +3,19 @@
 version = 4
 
 [[package]]
-name = "chatb-core"
+name = "bitchat-desktop-core"
 version = "0.1.0"
 dependencies = [
- "chatb-protocol",
+ "bitchat-desktop-protocol",
 ]
 
 [[package]]
-name = "chatb-ffi"
+name = "bitchat-desktop-ffi"
 version = "0.1.0"
 dependencies = [
- "chatb-core",
+ "bitchat-desktop-core",
 ]
 
 [[package]]
-name = "chatb-protocol"
+name = "bitchat-desktop-protocol"
 version = "0.1.0"

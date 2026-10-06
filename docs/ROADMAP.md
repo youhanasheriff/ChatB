@@ -1,4 +1,4 @@
-# ChatB Roadmap
+# BitChat Desktop Roadmap
 
 A living implementation checklist for the [vision and mission](VISION-AND-MISSION.md). It covers the known work from the current scaffold to a supported native desktop release and ongoing upstream maintenance. Newly discovered requirements must be added explicitly; this is not a claim that future upstream changes can be predicted.
 
@@ -26,18 +26,18 @@ Last reviewed: **October 6, 2026**. Stable-release work is in sections 0–26; s
 
 ## Verified starting point
 
-Baseline: ChatB setup commit `1bb00da`, following Bitchat `5e9287fae1e5fea80ca741d4ea669829dc16f144`. Repository: [youhanasheriff/ChatB](https://github.com/youhanasheriff/ChatB).
+Baseline: BitChat Desktop setup commit `1bb00da`, following Bitchat `5e9287fae1e5fea80ca741d4ea669829dc16f144`. Repository: [youhanasheriff/bitchat-desktop](https://github.com/youhanasheriff/bitchat-desktop).
 
-[Initial CI run](https://github.com/youhanasheriff/ChatB/actions/runs/37473129802): Rust scaffolding passed on macOS, Windows, and Linux; both Swift package jobs and fixture/provenance checks passed. The complete macOS Release build failed because the relocated project referenced the relay CSV at its old path. Commit `922e0ee` corrects that reference; a successful full rebuild and launch remain acceptance gates until verified.
+[Initial CI run](https://github.com/youhanasheriff/bitchat-desktop/actions/runs/37473129802): Rust scaffolding passed on macOS, Windows, and Linux; both Swift package jobs and fixture/provenance checks passed. The complete macOS Release build failed because the relocated project referenced the relay CSV at its old path. Commit `922e0ee` corrected that reference; the [follow-up CI run](https://github.com/youhanasheriff/bitchat-desktop/actions/runs/37473910185) passed, including the complete macOS Release build. Application launch and physical interoperability remain unverified.
 
 | Area | Current evidence | Remaining distinction |
 |---|---|---|
-| macOS | Inherited SwiftUI/CoreBluetooth code, ChatB product identity, passing package tests | Complete Release build, launch, application tests, and physical interoperability still need qualification |
+| macOS | Inherited SwiftUI/CoreBluetooth code, BitChat Desktop product identity, passing package tests and complete Release build | Launch, application tests, and physical interoperability still need qualification |
 | Windows | Directory scaffold; Rust workspace compiles in Windows CI | No native Windows client or Bluetooth implementation |
 | Linux | Directory scaffold; Rust workspace compiles in Linux CI | No native Linux client or Bluetooth implementation |
 | Shared Rust | Three compiling workspace crates | Protocol, core, and FFI behavior are not implemented |
 | Fixtures | Six copied upstream fixtures and seven Arti artifact hashes verified | Rust conformance runner and broader independent vectors remain |
-| Size | Small macOS UI probes in the research report | No finished ChatB installation size measured |
+| Size | Small macOS UI probes in the research report | No finished BitChat Desktop installation size measured |
 
 ## Milestones and dependencies
 
@@ -56,7 +56,7 @@ Within these milestones, packet correctness, secure identity handling, platform 
 
 ## Immediate next actions
 
-1. Verify the resource-path fix in a complete macOS CI build; resolve any further failures and launch the app.
+1. Launch the macOS app and qualify its application behavior and physical-device interoperability.
 2. Inventory shipping versus reserved upstream packet/capability behavior and freeze the first compatibility matrix.
 3. Prove Windows and Linux Bluetooth central/peripheral behavior on actual hardware.
 4. Implement the Rust packet codec plus an independent fixture runner.
@@ -70,14 +70,14 @@ A feature is done when its required implementation, positive/negative checks, up
 
 **Milestone:** M0 / M1. **Exit condition:** The project is public, attributable, and organized; implementation completeness is tracked separately.
 
-- [x] **FND-01** Publish ChatB under the personal `youhanasheriff` GitHub account as a public Bitchat fork.
+- [x] **FND-01** Publish BitChat Desktop under the personal `youhanasheriff` GitHub account as a public Bitchat fork.
 - [x] **FND-02** Retain upstream Git history, author/source notices, and the root Unlicense.
-- [x] **FND-03** Keep `origin` pointing to ChatB and `upstream` pointing to Bitchat.
+- [x] **FND-03** Keep `origin` pointing to BitChat Desktop and `upstream` pointing to Bitchat.
 - [x] **FND-04** Create `apps/macos`, `apps/windows`, and `apps/linux`.
 - [x] **FND-05** Create the protocol, core, and FFI Rust workspace crates.
 - [x] **FND-06** Create platform, interop-test, packaging, and documentation directories.
 - [x] **FND-07** Move the Apple project, packages, configuration, and tests into `apps/macos`.
-- [x] **FND-08** Set the macOS product/scheme to ChatB and assign a separate bundle/app-group identity.
+- [x] **FND-08** Set the macOS product/scheme to BitChat Desktop and assign a separate bundle/app-group identity.
 - [x] **FND-09** Remove the inherited signing team from shared build configuration.
 - [x] **FND-10** Preserve independent Noise/Nostr fixtures with a source and SHA-256 manifest.
 - [x] **FND-11** Preserve and verify the vendored Arti artifact hashes after relocation.
@@ -86,7 +86,7 @@ A feature is done when its required implementation, positive/negative checks, up
 - [x] **FND-14** Pass 184 BitFoundation and 13 BitLogger tests locally and in the initial CI run.
 - [x] **FND-15** Pass the inherited Python tests and fixture/provenance checks.
 - [x] **FND-16** Correct the relay CSV resource reference missed during the Apple project move; commit `922e0ee`.
-- [ ] **FND-17** Obtain a successful complete ChatB macOS Release build after the resource-path correction.
+- [x] **FND-17** Obtain a successful complete macOS Release build after the resource-path correction; commit `922e0ee`, CI run `37473910185` (before the branding rename).
 - [ ] **FND-18** Run the complete inherited application test suite and classify remaining failures.
 - [ ] **FND-19** Launch the built macOS app and verify identity storage, permissions, and a basic conversation.
 
@@ -276,11 +276,11 @@ A feature is done when its required implementation, positive/negative checks, up
 **Milestone:** M4 / M5. **Exit condition:** Identity and retained state survive intended restarts and are removed or protected as documented.
 
 - [ ] **STORE-01** Define a versioned inventory of identity, trust, favorites, blocks, drafts, archives, queues, media, and settings.
-- [ ] **STORE-02** Use macOS Keychain with ChatB-specific service/access-group identifiers.
+- [ ] **STORE-02** Use macOS Keychain with BitChat Desktop-specific service/access-group identifiers.
 - [ ] **STORE-03** Implement Windows per-user protected key storage and verify profile/lock behavior.
 - [ ] **STORE-04** Implement the selected Linux secret-service/keyring integration and behavior when it is locked or absent.
 - [ ] **STORE-05** Avoid silently writing private keys to unprotected files when secure storage is unavailable.
-- [ ] **STORE-06** Separate ChatB state from an installed Bitchat client and test side-by-side operation.
+- [ ] **STORE-06** Separate BitChat Desktop state from an installed Bitchat client and test side-by-side operation.
 - [ ] **STORE-07** Choose transactional on-disk storage and atomic schema migration/recovery behavior.
 - [ ] **STORE-08** Preserve exactly which records are encrypted, temporary, durable, expired, or excluded from backup.
 - [ ] **STORE-09** Implement retention limits, bounded caches, and cleanup scheduling.
@@ -290,11 +290,11 @@ A feature is done when its required implementation, positive/negative checks, up
 
 ## 12. Native macOS client
 
-**Milestone:** M1 / M4 / M6. **Exit condition:** A native ChatB app builds, launches, interoperates, and fits normal macOS behavior.
+**Milestone:** M1 / M4 / M6. **Exit condition:** A native BitChat Desktop app builds, launches, interoperates, and fits normal macOS behavior.
 
 - [ ] **MAC-01** Finish the clean-checkout Release build and resolve all remaining relocation/build issues.
 - [ ] **MAC-02** Verify Apple Silicon and any Intel architecture included in the published support matrix.
-- [ ] **MAC-03** Complete ChatB naming, icons, About information, menu items, help links, and upstream attribution.
+- [ ] **MAC-03** Complete BitChat Desktop naming, icons, About information, menu items, help links, and upstream attribution.
 - [ ] **MAC-04** Audit entitlements, Bluetooth/location/microphone permissions, sandbox settings, and signing configuration.
 - [ ] **MAC-05** Verify app-group and Keychain isolation from upstream Bitchat.
 - [ ] **MAC-06** Implement/test native menus, keyboard shortcuts, window sizing, focus, and multi-window policy.
@@ -343,7 +343,7 @@ A feature is done when its required implementation, positive/negative checks, up
 
 **Milestone:** M4 / M6. **Exit condition:** The three native interfaces expose consistent messaging semantics and understandable connection states.
 
-- [ ] **UX-01** Design first launch, local identity/nickname setup, and permission explanations without requiring a ChatB account.
+- [ ] **UX-01** Design first launch, local identity/nickname setup, and permission explanations without requiring a BitChat Desktop account.
 - [ ] **UX-02** Distinguish nearby mesh, internet channels, direct conversations, groups, and unavailable transports.
 - [ ] **UX-03** Show nearby peers, verified identity, reachability, and supported capabilities without overstating trust.
 - [ ] **UX-04** Implement public and private text compose/send flows with correct destination selection.
@@ -353,7 +353,7 @@ A feature is done when its required implementation, positive/negative checks, up
 - [ ] **UX-08** Implement favorites, blocking/unblocking, verification fingerprints/QR, and supported vouch flows.
 - [ ] **UX-09** Match the supported command set and provide discoverable native controls/help for essential actions.
 - [ ] **UX-10** Treat payment/token text as untrusted content; port supported formatting without adding wallet custody or automatic spending.
-- [ ] **UX-11** Confirm supported deep links and avoid ambiguous OS-level ownership between ChatB and Bitchat.
+- [ ] **UX-11** Confirm supported deep links and avoid ambiguous OS-level ownership between BitChat Desktop and Bitchat.
 - [ ] **UX-12** Handle empty state, no peers, denied permission, unavailable adapters, Tor startup, and disconnected relays.
 - [ ] **UX-13** Use virtualized/bounded message and peer views for large histories.
 - [ ] **UX-14** Implement navigation, focus restoration, keyboard shortcuts, and accessible control labels on all platforms.
@@ -566,7 +566,7 @@ A feature is done when its required implementation, positive/negative checks, up
 - [ ] **LATER-06** Evaluate identity backup/migration and multi-device behavior as explicit security/product features.
 - [ ] **LATER-07** Evaluate optional, consent-based diagnostics only if local reports prove insufficient.
 - [ ] **LATER-08** Reconsider a shared UI framework only if measured native-maintenance cost changes the agreed priorities.
-- [ ] **LATER-09** Consider ChatB mobile/browser clients, custom servers, wallets, or new networks only as separately scoped projects.
+- [ ] **LATER-09** Consider BitChat Desktop mobile/browser clients, custom servers, wallets, or new networks only as separately scoped projects.
 
 ## Evidence and source index
 

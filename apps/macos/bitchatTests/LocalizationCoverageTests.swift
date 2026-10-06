@@ -141,7 +141,7 @@ struct LocalizationCoverageTests {
     /// set changes.
     private static func shareExtensionMembershipExceptions() throws -> Set<String> {
         let project = try String(
-            contentsOf: repoRoot.appendingPathComponent("ChatB.xcodeproj/project.pbxproj"),
+            contentsOf: repoRoot.appendingPathComponent("BitChatDesktop.xcodeproj/project.pbxproj"),
             encoding: .utf8
         )
         let marker = #"Exceptions for "bitchat" folder in "bitchatShareExtension" target"#

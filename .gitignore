@@ -82,7 +82,7 @@ build.log
 Local.xcconfig
 *.profraw
 
-# ChatB Rust workspace and packaged artifacts
+# BitChat Desktop Rust workspace and packaged artifacts
 /target/
 /dist/
 .env

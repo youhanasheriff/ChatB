@@ -42,7 +42,7 @@ struct ContentHeaderView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Text(verbatim: "bitchat/")
+            Text(verbatim: "BitChat Desktop")
                 .bitchatFont(size: 18, weight: .medium)
                 .lineLimit(1)
                 .foregroundColor(palette.primary)
@@ -70,7 +70,7 @@ struct ContentHeaderView: View {
                 // stays undiscoverable on purpose — it's destructive.)
                 .accessibilityAddTraits(.isButton)
                 .accessibilityHint(
-                    String(localized: "content.accessibility.app_info_hint", comment: "Accessibility hint on the bitchat/ logo explaining a tap opens app info")
+                    String(localized: "content.accessibility.app_info_hint", comment: "Accessibility hint on the BitChat Desktop logo explaining a tap opens app info")
                 )
                 .accessibilityAction {
                     appChromeModel.presentAppInfo()

@@ -1,12 +1,14 @@
-# ChatB
+# BitChat Desktop
 
-ChatB is an independent, open-source desktop project following [Bitchat](https://github.com/permissionlesstech/bitchat), targeting **macOS, Windows, and Linux**. The priority is a small application with native interfaces and Bitchat protocol compatibility.
+An independent Bitchat-compatible client for macOS, Windows, and Linux.
+
+BitChat Desktop is an independent, open-source desktop project following [Bitchat](https://github.com/permissionlesstech/bitchat), targeting **macOS, Windows, and Linux**. The priority is a small application with native interfaces and Bitchat protocol compatibility.
 
 Read the [vision and mission](docs/VISION-AND-MISSION.md) and the [implementation roadmap](docs/ROADMAP.md) for the project's commitments, milestones, and detailed completion checklist.
 
 ## Current status
 
-- **macOS:** the upstream SwiftUI/CoreBluetooth implementation is retained in `apps/macos`, with a ChatB application product and separate bundle identity. A completed ChatB Release build has not yet been verified.
+- **macOS:** the upstream SwiftUI/CoreBluetooth implementation is retained in `apps/macos`, with a BitChat Desktop application product and separate bundle identity. The inherited macOS Release build passed CI after the monorepo move; application launch and hardware interoperability remain to be verified.
 - **Windows:** native Win32 client planned; directory scaffold only.
 - **Linux:** native GTK4 client planned; directory scaffold only.
 - **Shared Rust core:** workspace scaffolding only. Packet codecs, cryptography, routing, and Nostr implementation have not yet been ported or connected to the macOS app.
@@ -43,22 +45,22 @@ cargo clippy --workspace --all-targets --locked -- -D warnings
 Open the macOS project:
 
 ```sh
-open apps/macos/ChatB.xcodeproj
+open apps/macos/BitChatDesktop.xcodeproj
 ```
 
-Select **ChatB (macOS)**. To build an unsigned Release application:
+Select **BitChat Desktop (macOS)**. To build an unsigned Release application:
 
 ```sh
-xcodebuild -project apps/macos/ChatB.xcodeproj \
-  -scheme "ChatB (macOS)" -configuration Release \
+xcodebuild -project apps/macos/BitChatDesktop.xcodeproj \
+  -scheme "BitChat Desktop (macOS)" -configuration Release \
   -destination 'generic/platform=macOS' \
   -derivedDataPath apps/macos/.DerivedData \
   CODE_SIGNING_ALLOWED=NO build
 ```
 
-The application should be produced at `apps/macos/.DerivedData/Build/Products/Release/ChatB.app`. Xcode must resolve the upstream Swift package dependencies first. For signed development, set your own team in ignored `apps/macos/Configs/Local.xcconfig` and use the Debug configuration.
+The application should be produced at `apps/macos/.DerivedData/Build/Products/Release/BitChat Desktop.app`. Xcode must resolve the upstream Swift package dependencies first. For signed development, set your own team in ignored `apps/macos/Configs/Local.xcconfig` and use the Debug configuration.
 
-Upstream Swift tests can be run with `swift test --package-path apps/macos`. iOS files and targets remain as inherited implementation support; iOS is outside ChatB's selected product scope.
+Upstream Swift tests can be run with `swift test --package-path apps/macos`. iOS files and targets remain as inherited implementation support; iOS is outside BitChat Desktop's selected product scope.
 
 ## Compatibility and upstream
 
@@ -66,6 +68,6 @@ Start with the pinned upstream behavior and independent interoperability fixture
 
 ## License
 
-ChatB retains Bitchat's **Unlicense** dedication. See [LICENSE](LICENSE). Bundled dependencies retain their own licenses and attribution; the root license does not replace them.
+BitChat Desktop retains Bitchat's **Unlicense** dedication. See [LICENSE](LICENSE). Bundled dependencies retain their own licenses and attribution; the root license does not replace them.
 
-ChatB is independently maintained by [Youhana Sheriff](https://github.com/youhanasheriff). It is not an official Bitchat release.
+BitChat Desktop is independently maintained by [Youhana Sheriff](https://github.com/youhanasheriff). It is not an official Bitchat release.

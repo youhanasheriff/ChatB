@@ -8,12 +8,12 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.85"
 license = "Unlicense"
-repository = "https://github.com/youhanasheriff/ChatB"
+repository = "https://github.com/youhanasheriff/bitchat-desktop"
 publish = false
 
 [workspace.dependencies]
-chatb-protocol = { path = "crates/protocol" }
-chatb-core = { path = "crates/core" }
+bitchat-desktop-protocol = { path = "crates/protocol" }
+bitchat-desktop-core = { path = "crates/core" }
 
 [profile.release]
 opt-level = "z"

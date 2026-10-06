@@ -1,15 +1,15 @@
-# ChatB macOS developer commands
+# BitChat Desktop macOS developer commands
 #
 # Builds use a repository-local, ignored DerivedData directory. No recipe
 # patches, restores, or removes tracked project/configuration files.
 
-project := "ChatB.xcodeproj"
-macos_scheme := "ChatB (macOS)"
+project := "BitChatDesktop.xcodeproj"
+macos_scheme := "BitChat Desktop (macOS)"
 ios_scheme := "bitchat (iOS)"
 derived_data := ".DerivedData"
 
 default:
-    @echo "ChatB macOS developer commands:"
+    @echo "BitChat Desktop macOS developer commands:"
     @echo "  just run                Build and run the macOS app"
     @echo "  just build              Build the macOS app without signing"
     @echo "  just test               Run the SwiftPM test suite"
@@ -31,11 +31,11 @@ check: check-clean-safety
     @echo "✅ Development environment ready (a signing identity is not required for just build)"
 
 build: check
-    @echo "Building ChatB for macOS..."
+    @echo "Building BitChat Desktop for macOS..."
     @xcodebuild -project "{{project}}" -scheme "{{macos_scheme}}" -configuration Debug -derivedDataPath "{{derived_data}}" CODE_SIGNING_ALLOWED=NO build
 
 run: build
-    @app="{{derived_data}}/Build/Products/Debug/ChatB.app"; test -d "$app" || (echo "❌ Built app not found at $app" && exit 1); open "$app"
+    @app="{{derived_data}}/Build/Products/Debug/BitChat Desktop.app"; test -d "$app" || (echo "❌ Built app not found at $app" && exit 1); open "$app"
 
 # Backward-compatible alias for the old quick-run recipe.
 dev-run: run
@@ -61,6 +61,6 @@ nuke: clean
     @echo "✅ Removed repository build caches; tracked files were untouched"
 
 info:
-    @echo "ChatB - Bitchat-compatible desktop messaging"
+    @echo "BitChat Desktop - Bitchat-compatible desktop messaging"
     @echo "macOS 13+ and iOS 16+"
     @echo "Bluetooth mesh behavior requires physical Bluetooth-capable devices"

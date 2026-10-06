@@ -4,7 +4,7 @@ import unittest
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-# Verify the preserved upstream snapshot; it is not an active ChatB workflow.
+# Verify the preserved upstream snapshot; it is not an active BitChat Desktop workflow.
 WORKFLOW_PATH = REPOSITORY_ROOT / "docs/upstream/workflows/fetch_georelays.yml"
 
 

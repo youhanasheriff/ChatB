@@ -8,5 +8,5 @@ SWIFT_VERSION = 5.0
 DEVELOPMENT_TEAM =
 CODE_SIGN_STYLE = Automatic
 
-PRODUCT_BUNDLE_IDENTIFIER = io.github.youhanasheriff.chatb
-APP_GROUP_ID = group.io.github.youhanasheriff.chatb
+PRODUCT_BUNDLE_IDENTIFIER = io.github.youhanasheriff.bitchatdesktop
+APP_GROUP_ID = group.io.github.youhanasheriff.bitchatdesktop

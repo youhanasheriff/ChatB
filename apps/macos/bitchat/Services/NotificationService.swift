@@ -109,7 +109,7 @@ final class NotificationService {
             String(localized: "notification.redacted.geohash.title", defaultValue: "📍 new activity nearby", comment: "Lock-screen notification title for activity in a location channel when message previews are hidden; deliberately omits the geohash")
         }
         static var body: String {
-            String(localized: "notification.redacted.body", defaultValue: "open bitchat to read", comment: "Lock-screen notification body shown in place of the message text when message previews are hidden")
+            String(localized: "notification.redacted.body", defaultValue: "open BitChat Desktop to read", comment: "Lock-screen notification body shown in place of the message text when message previews are hidden")
         }
     }
 
