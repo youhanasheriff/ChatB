@@ -1,0 +1,78 @@
+name: ChatB CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chatb-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  rust:
+    name: Rust workspace (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install Rust
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt --component clippy
+          rustup default stable
+      - run: cargo fmt --all -- --check
+      - run: cargo check --workspace --locked
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
+      - name: Build workspace scaffolding
+        run: cargo build --workspace --release --locked
+
+  fixtures:
+    name: Verify imported fixture provenance
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify fixture copies
+        run: python3 scripts/verify-interop-fixtures.py
+      - name: Test inherited relay validator
+        run: python3 -m unittest discover -s scripts/tests -p "test_*.py" -v
+      - name: Verify vendored Arti hashes
+        run: python3 scripts/verify-arti-provenance.py
+
+  swift-packages:
+    name: Swift package tests (${{ matrix.package }})
+    runs-on: macos-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [BitFoundation, BitLogger]
+    steps:
+      - uses: actions/checkout@v5
+      - run: swift test --package-path apps/macos/localPackages/${{ matrix.package }}
+
+  macos:
+    name: Build ChatB macOS Release
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate artifact-only clean recipe
+        run: bash apps/macos/scripts/check-just-clean-safety.sh
+      - name: Build unsigned app
+        run: |
+          set -o pipefail
+          xcodebuild -project apps/macos/ChatB.xcodeproj \
+            -scheme "ChatB (macOS)" -configuration Release \
+            -destination 'generic/platform=macOS' \
+            -derivedDataPath apps/macos/.DerivedData \
+            CODE_SIGNING_ALLOWED=NO build

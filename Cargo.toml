@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+members = ["crates/protocol", "crates/core", "crates/ffi"]
+exclude = ["apps/macos/localPackages/Arti"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "Unlicense"
+repository = "https://github.com/youhanasheriff/ChatB"
+publish = false
+
+[workspace.dependencies]
+chatb-protocol = { path = "crates/protocol" }
+chatb-core = { path = "crates/core" }
+
+[profile.release]
+opt-level = "z"
+lto = "thin"
+codegen-units = 1
+strip = "symbols"
+panic = "abort"

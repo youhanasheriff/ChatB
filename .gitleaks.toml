@@ -1,0 +1,45 @@
+title = "ChatB secret scanning"
+
+[extend]
+useDefault = true
+
+# Upstream source declarations contain type names, not embedded private keys.
+[[allowlists]]
+description = "Reviewed Swift cryptographic type-name false positives"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = [
+  '''^BRING_THE_NOISE\.md$''',
+  '''^(apps/macos/)?bitchat/(Noise/NoiseSession|Nostr/NostrProtocol|Services/NoiseEncryptionService)\.swift$''',
+  '''^(apps/macos/)?bitchatTests/Services/GroupProtocolTests\.swift$''',
+]
+regexes = [
+  '''^Curve25519\.(KeyAgreement|Signing)\.PrivateKey$''',
+  '''^P256K\.Schnorr\.PrivateKey$''',
+]
+
+# These exact strings are upstream formatting-test examples, not live tokens.
+[[allowlists]]
+description = "Reviewed upstream Cashu formatting examples"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = ['''^(apps/macos/)?bitchatTests/MessageFormattingEngineTests\.swift$''']
+regexes = [
+  '''^cashuAeyJwcm9vZnMiOiJIZWxsbyBXb3JsZCEgVGhpcyBpcyBhIHRlc3QgdG9rZW4i$''',
+  '''^cashuAeyJwcm9vZnMiOlt7ImlkIjoiMDAwMDAwMDAwMDAwMDAwMCJ9XX0=$''',
+]
+
+# Published upstream recipient key used only to decrypt a frozen test envelope.
+# Both the fixture path and the exact reviewed test key must match.
+[[allowlists]]
+description = "Published upstream legacy-envelope test recipient"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "secret"
+paths = [
+  '''^(apps/macos/)?bitchatTests/Nostr/Fixtures/LegacyPrivateEnvelope733098bbRecipientKey\.json$''',
+  '''^tests/interop/fixtures/nostr/LegacyPrivateEnvelope733098bbRecipientKey\.json$''',
+]
+regexes = ['''^8355a5c110cdfef2e644f4ad5d51c39f253b2c2c80ebb6856379fb16531dc1fa$''']

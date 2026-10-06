@@ -81,3 +81,13 @@ build.log
 # Local configs
 Local.xcconfig
 *.profraw
+
+# ChatB Rust workspace and packaged artifacts
+/target/
+/dist/
+.env
+.env.*
+!.env.example
+*.p12
+*.pfx
+*.mobileprovision

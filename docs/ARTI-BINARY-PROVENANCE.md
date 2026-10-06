@@ -2,17 +2,17 @@
 
 This repo vendors a prebuilt Arti static-library xcframework at:
 
-`localPackages/Arti/Frameworks/arti.xcframework`
+`apps/macos/localPackages/Arti/Frameworks/arti.xcframework`
 
-SwiftPM links it through `localPackages/Arti/Package.swift` as the binary target named `arti`. Treat changes to this artifact like dependency updates: review the Rust sources, lockfile, build script, produced headers, and artifact hashes together.
+SwiftPM links it through `apps/macos/localPackages/Arti/Package.swift` as the binary target named `arti`. Treat changes to this artifact like dependency updates: review the Rust sources, lockfile, build script, produced headers, and artifact hashes together.
 
 ## Source Inputs
 
-- Rust workspace: `localPackages/Arti/Cargo.toml`
-- Crate: `localPackages/Arti/arti-bitchat`
-- Dependency lockfile: `localPackages/Arti/Cargo.lock`
-- Build script: `localPackages/Arti/build-ios.sh`
-- Exported C header: `localPackages/Arti/Frameworks/include/arti.h`
+- Rust workspace: `apps/macos/localPackages/Arti/Cargo.toml`
+- Crate: `apps/macos/localPackages/Arti/arti-bitchat`
+- Dependency lockfile: `apps/macos/localPackages/Arti/Cargo.lock`
+- Build script: `apps/macos/localPackages/Arti/build-ios.sh`
+- Exported C header: `apps/macos/localPackages/Arti/Frameworks/include/arti.h`
 
 The crate declares `rust-version = "1.90"` and uses `arti-client` / `tor-rtcompat` `0.38` with minimal Tokio/Rustls features. The current lockfile requires Rust 1.90 or newer. The build script currently targets:
 
@@ -29,7 +29,7 @@ It builds release static libraries with size-oriented flags (`opt-level=z`, fat 
 From the repo root:
 
 ```sh
-cd localPackages/Arti
+cd apps/macos/localPackages/Arti
 rustup toolchain install 1.96.0
 rustup target add --toolchain 1.96.0 aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios aarch64-apple-darwin x86_64-apple-darwin
 rustup run 1.96.0 cargo install cbindgen --version 0.29.4 --locked
@@ -70,19 +70,19 @@ The build script now normalizes static-archive metadata and writes a stable xcfr
 Run this from the repo root to verify the checked-in artifact:
 
 ```sh
-find localPackages/Arti/Frameworks/arti.xcframework -maxdepth 3 -type f -print0 | sort -z | xargs -0 shasum -a 256
+find apps/macos/localPackages/Arti/Frameworks/arti.xcframework -maxdepth 3 -type f -print0 | sort -z | xargs -0 shasum -a 256
 ```
 
 Current hashes:
 
 ```text
-cac99db408280bbef15cae8ce64c8ccdbf2e8863c205168d59f83fe8ab680f94  localPackages/Arti/Frameworks/arti.xcframework/Info.plist
-551655904834748c9dc36034fdbc9465e7533aef1e4a6514b4fcc75875b93058  localPackages/Arti/Frameworks/arti.xcframework/ios-arm64/Headers/arti.h
-5461a231a786812e91e7965290031ea3479fdc5c6459553e46988ecafbbc2a3d  localPackages/Arti/Frameworks/arti.xcframework/ios-arm64/libarti_bitchat.a
-551655904834748c9dc36034fdbc9465e7533aef1e4a6514b4fcc75875b93058  localPackages/Arti/Frameworks/arti.xcframework/ios-arm64_x86_64-simulator/Headers/arti.h
-af8f5f636eb6affb309b3e44f13e48498eb2540c77af44ddcd7fdf9241b1e317  localPackages/Arti/Frameworks/arti.xcframework/ios-arm64_x86_64-simulator/libarti_bitchat.a
-551655904834748c9dc36034fdbc9465e7533aef1e4a6514b4fcc75875b93058  localPackages/Arti/Frameworks/arti.xcframework/macos-arm64_x86_64/Headers/arti.h
-7c9afe98227f1767567ddcd4e35d9dfffe70309c302c4dbc9a6c9d6aeefab007  localPackages/Arti/Frameworks/arti.xcframework/macos-arm64_x86_64/libarti_bitchat.a
+cac99db408280bbef15cae8ce64c8ccdbf2e8863c205168d59f83fe8ab680f94  apps/macos/localPackages/Arti/Frameworks/arti.xcframework/Info.plist
+551655904834748c9dc36034fdbc9465e7533aef1e4a6514b4fcc75875b93058  apps/macos/localPackages/Arti/Frameworks/arti.xcframework/ios-arm64/Headers/arti.h
+5461a231a786812e91e7965290031ea3479fdc5c6459553e46988ecafbbc2a3d  apps/macos/localPackages/Arti/Frameworks/arti.xcframework/ios-arm64/libarti_bitchat.a
+551655904834748c9dc36034fdbc9465e7533aef1e4a6514b4fcc75875b93058  apps/macos/localPackages/Arti/Frameworks/arti.xcframework/ios-arm64_x86_64-simulator/Headers/arti.h
+af8f5f636eb6affb309b3e44f13e48498eb2540c77af44ddcd7fdf9241b1e317  apps/macos/localPackages/Arti/Frameworks/arti.xcframework/ios-arm64_x86_64-simulator/libarti_bitchat.a
+551655904834748c9dc36034fdbc9465e7533aef1e4a6514b4fcc75875b93058  apps/macos/localPackages/Arti/Frameworks/arti.xcframework/macos-arm64_x86_64/Headers/arti.h
+7c9afe98227f1767567ddcd4e35d9dfffe70309c302c4dbc9a6c9d6aeefab007  apps/macos/localPackages/Arti/Frameworks/arti.xcframework/macos-arm64_x86_64/libarti_bitchat.a
 ```
 
 ## Review Checklist

@@ -1,0 +1,36 @@
+{
+  "upstream_repository": "https://github.com/permissionlesstech/bitchat",
+  "upstream_commit": "5e9287fae1e5fea80ca741d4ea669829dc16f144",
+  "fixtures": [
+    {
+      "path": "fixtures/nostr/AndroidLegacyPrivateEnvelopeB7f0b33d.json",
+      "source": "apps/macos/bitchatTests/Nostr/Fixtures/AndroidLegacyPrivateEnvelopeB7f0b33d.json",
+      "sha256": "d2df3d0b7ffd84c5cb25e0b3f4a89ad14f72a105bddadab77081f98c661b080e"
+    },
+    {
+      "path": "fixtures/nostr/AndroidLegacyPrivateEnvelopeB7f0b33dGenerator.patch.txt",
+      "source": "apps/macos/bitchatTests/Nostr/Fixtures/AndroidLegacyPrivateEnvelopeB7f0b33dGenerator.patch.txt",
+      "sha256": "e7ad29d6a247638cc16fb2ec06937266e6a03e7a115ae00913330a86a88fa56a"
+    },
+    {
+      "path": "fixtures/nostr/AndroidLegacyPrivateEnvelopeB7f0b33dMetadata.json",
+      "source": "apps/macos/bitchatTests/Nostr/Fixtures/AndroidLegacyPrivateEnvelopeB7f0b33dMetadata.json",
+      "sha256": "32c528aa70f2397d83a72ce256f0ad3d4945e82a7cd9ebfec84cac5b15fc8be6"
+    },
+    {
+      "path": "fixtures/nostr/LegacyPrivateEnvelope733098bb.json",
+      "source": "apps/macos/bitchatTests/Nostr/Fixtures/LegacyPrivateEnvelope733098bb.json",
+      "sha256": "d916164901a366689d04a3a456d84f74ad346335e43f454d34f5292415cec054"
+    },
+    {
+      "path": "fixtures/nostr/LegacyPrivateEnvelope733098bbRecipientKey.json",
+      "source": "apps/macos/bitchatTests/Nostr/Fixtures/LegacyPrivateEnvelope733098bbRecipientKey.json",
+      "sha256": "c0e46d218a5448e309f2bd71316c605a90791e035f8e7fa6d6f63f9304bf9deb"
+    },
+    {
+      "path": "fixtures/noise/NoiseTestVectors.json",
+      "source": "apps/macos/bitchatTests/Noise/NoiseTestVectors.json",
+      "sha256": "9ff85f460aa1db3d69b3289560be31aa844cf850edc9d4c4650bdc7a9152c00b"
+    }
+  ]
+}

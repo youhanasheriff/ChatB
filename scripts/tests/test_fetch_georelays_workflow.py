@@ -4,7 +4,8 @@ import unittest
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-WORKFLOW_PATH = REPOSITORY_ROOT / ".github/workflows/fetch_georelays.yml"
+# Verify the preserved upstream snapshot; it is not an active ChatB workflow.
+WORKFLOW_PATH = REPOSITORY_ROOT / "docs/upstream/workflows/fetch_georelays.yml"
 
 
 class FetchGeoRelaysWorkflowTests(unittest.TestCase):
