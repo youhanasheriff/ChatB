@@ -15,6 +15,14 @@ Read the [vision and mission](docs/VISION-AND-MISSION.md) and the [implementatio
 
 No Windows/Linux release or complete cross-platform compatibility is claimed yet.
 
+## Try the macOS early preview
+
+Visit the [BitChat Desktop website](https://youhanasheriff.github.io/bitchat-desktop-site/) or [download the macOS early preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/v0.1.0-preview.1).
+
+The preview targets **Apple silicon Macs running macOS 13 or later**. It is ad-hoc signed and **not notarized by Apple**; read the release's installation notes before downloading. Windows and Linux builds are coming later. This is an experimental preview, with hardware interoperability still to be qualified.
+
+The landing page is maintained separately in [bitchat-desktop-site](https://github.com/youhanasheriff/bitchat-desktop-site).
+
 ## Repository
 
 ```text

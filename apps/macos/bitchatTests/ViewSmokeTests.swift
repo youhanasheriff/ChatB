@@ -558,6 +558,94 @@ struct ViewSmokeTests {
     }
 
     #if os(macOS)
+    /// Opt-in artifact capture: the helper script creates the marker only for
+    /// this test run. All conversations and peers are fictitious, and transport
+    /// remains mocked. Nothing is added to the shipping app.
+    @Test("Capture native marketing screenshots with sample conversations")
+    func desktopMarketingScreenshots() async throws {
+        let output = URL(fileURLWithPath: "/tmp/bitchat-marketing-captures", isDirectory: true)
+        guard FileManager.default.fileExists(atPath: output.appendingPathComponent(".enabled").path) else { return }
+        let (viewModel, transport, _) = makeSmokeViewModel()
+        viewModel.nickname = "you"
+        let models = makeSmokeFeatureModels(for: viewModel)
+        let maya = PeerID(str: "6162636465666768")
+        let jules = PeerID(str: "7172737475767778")
+        let noor = PeerID(str: "8182838485868788")
+        transport.updatePeerSnapshots([
+            makeSnapshot(peerID: maya, nickname: "Maya", noiseByte: 0x61),
+            makeSnapshot(peerID: jules, nickname: "Jules", noiseByte: 0x71),
+            makeSnapshot(peerID: noor, nickname: "Noor", noiseByte: 0x81)
+        ])
+        let lines: [(String, PeerID, String)] = [
+            ("Maya", maya, "Found a table by the window. Anyone nearby?"),
+            ("Jules", jules, "Just arrived. I can see your messages here."),
+            ("you", transport.myPeerID, "On my way. Save me a seat!"),
+            ("Noor", noor, "Bringing coffee. What does everyone want?"),
+            ("Maya", maya, "One flat white for me ☕"),
+            ("you", transport.myPeerID, "Make that two. I'll bring the sketchbook."),
+            ("Jules", jules, "Perfect. Let's start with the weekend plans."),
+            ("Noor", noor, "See you all in five.")
+        ]
+        let start = Calendar.current.date(bySettingHour: 10, minute: 24, second: 0, of: Date())!
+        for (index, line) in lines.enumerated() {
+            viewModel.conversations.append(BitchatMessage(
+                id: "marketing-sample-\(index)", sender: line.0, content: line.2,
+                timestamp: start.addingTimeInterval(Double(index * 40)),
+                isRelay: false, senderPeerID: line.1
+            ), to: .mesh)
+        }
+        try await Task.sleep(for: .milliseconds(150))
+
+        let suite = "BitChatMarketingCapture.\(UUID().uuidString)"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(true, forKey: "desktop.sidebarVisible")
+        for (theme, style, name) in [
+            (AppTheme.nativeLight, ChatMessageStyle.bubble, "light-bubbles"),
+            (.matrix, .terminal, "terminal"),
+            (.graphite, .bubble, "graphite")
+        ] {
+            defaults.set(style.rawValue, forKey: ChatMessageStyle.storageKey)
+            defaults.set(theme.rawValue, forKey: AppTheme.storageKey)
+            let root = installSmokeEnvironment(ContentView(), featureModels: models)
+                .defaultAppStorage(defaults)
+                .environment(\.appTheme, theme)
+                .environment(\.colorScheme, theme.preferredColorScheme ?? .dark)
+            try await captureMarketingView(root, name: name, output: output,
+                                           size: NSSize(width: 1120, height: 840))
+        }
+        defaults.set("settings", forKey: "appInfo.selectedPane")
+        defaults.set(AppTheme.nativeLight.rawValue, forKey: AppTheme.storageKey)
+        defaults.set(ChatMessageStyle.bubble.rawValue, forKey: ChatMessageStyle.storageKey)
+        let settings = installSmokeEnvironment(AppInfoView(), featureModels: models)
+            .defaultAppStorage(defaults)
+            .environment(\.appTheme, AppTheme.nativeLight)
+            .environment(\.colorScheme, ColorScheme.light)
+        try await captureMarketingView(settings, name: "settings", output: output,
+                                       size: NSSize(width: 620, height: 760))
+        #expect(transport.sentMessages.isEmpty)
+        #expect(transport.sentPrivateMessages.isEmpty)
+    }
+
+    private func captureMarketingView<V: View>(
+        _ root: V, name: String, output: URL, size: NSSize
+    ) async throws {
+        let controller = NSHostingController(rootView: root)
+        let window = NSWindow(contentRect: NSRect(origin: .zero, size: size),
+                              styleMask: [.borderless], backing: .buffered, defer: false)
+        window.contentViewController = controller
+        window.setContentSize(size)
+        window.orderFrontRegardless()
+        defer { window.orderOut(nil) }
+        try await Task.sleep(for: .milliseconds(350))
+        let host = controller.view
+        host.layoutSubtreeIfNeeded()
+        let bitmap = try #require(host.bitmapImageRepForCachingDisplay(in: host.bounds))
+        host.cacheDisplay(in: host.bounds, to: bitmap)
+        let png = try #require(bitmap.representation(using: .png, properties: [:]))
+        try png.write(to: output.appendingPathComponent("\(name).png"))
+    }
+
     @Test("Desktop themes render at minimum size and keep the selected inline chat")
     func desktopShell_rendersThemesAndInlineConversation() async throws {
         let (viewModel, transport, _) = makeSmokeViewModel()
