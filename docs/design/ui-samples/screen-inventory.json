@@ -212,7 +212,7 @@
     "title": "No nearby peers",
     "category": "States & dialogs",
     "type": "empty",
-    "source": "Components/MeshEmptyStateView.swift + MeshRadarView.swift",
+    "source": "Components/MeshEmptyStateView.swift + Components/MeshRadarView.swift",
     "description": "Discovery empty state within the mesh conversation."
   },
   {
