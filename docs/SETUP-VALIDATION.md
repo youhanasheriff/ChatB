@@ -19,3 +19,9 @@ Windows and Linux app binaries have not been implemented, built, or tested. The 
 ## Subsequent CI verification
 
 After correcting the relocated relay CSV reference in commit `922e0ee`, [CI run 37473910185](https://github.com/youhanasheriff/bitchat-desktop/actions/runs/37473910185) passed every job, including the complete unsigned macOS Release build. This verifies the monorepo build before the BitChat Desktop branding rename; it does not establish application launch or hardware interoperability.
+
+## BitChat Desktop rename validation
+
+The rename updates repository links, the macOS product/project/scheme, bundle and app-group identifiers, visible app names, and Rust package names. The internal Swift module and Bitchat wire identifiers remain unchanged. Rust formatting, Clippy (warnings denied), Release compilation, all 20 Python tests, project/plist syntax, scheme paths, localization keys/placeholders, and the clean-command guard passed.
+
+The local full Release build with Xcode 27.0 resolved its packages but failed compiling the pinned `swift-secp256k1` 0.21.1 dependency: `UInt256.swift:215:21: ambiguous use of words`. The renamed application has not been launched or measured locally. [Rename CI run](https://github.com/youhanasheriff/bitchat-desktop/actions/runs/37475808687) tracks the corresponding GitHub build; its result must be checked separately from the earlier successful baseline.

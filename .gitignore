@@ -54,7 +54,7 @@ fastlane/test_output
 iOSInjectionProject/
 
 ## Xcode project
-*.xcodeproj/project.xcworkspace/
+**/*.xcodeproj/project.xcworkspace/
 ## Xcode User settings
 xcuserdata/
 
