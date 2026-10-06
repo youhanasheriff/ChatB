@@ -2,6 +2,8 @@
 
 ChatB is an independent, open-source desktop project following [Bitchat](https://github.com/permissionlesstech/bitchat), targeting **macOS, Windows, and Linux**. The priority is a small application with native interfaces and Bitchat protocol compatibility.
 
+Read the [vision and mission](docs/VISION-AND-MISSION.md) and the [implementation roadmap](docs/ROADMAP.md) for the project's commitments, milestones, and detailed completion checklist.
+
 ## Current status
 
 - **macOS:** the upstream SwiftUI/CoreBluetooth implementation is retained in `apps/macos`, with a ChatB application product and separate bundle identity. A completed ChatB Release build has not yet been verified.

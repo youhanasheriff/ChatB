@@ -1,5 +1,7 @@
 # ChatB desktop architecture
 
+The [vision and mission](VISION-AND-MISSION.md) define the product commitments. The [roadmap](ROADMAP.md) tracks implementation and acceptance work across all three platforms.
+
 ## Targets and status
 
 ChatB targets native macOS, Windows, and Linux interfaces with minimum practical installation size. The working source starting point is the inherited macOS Swift client. Windows/Linux and the Rust crates are scaffolds, not complete clients.
