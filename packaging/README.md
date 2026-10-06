@@ -12,10 +12,25 @@ Pass the commit actually used for the application build; do not infer it from a
 later tooling-only commit. This packages an already built app, collects the
 locked third-party notices, sets preview version metadata, and signs a copy ad
 hoc. It does not use this machine's signing identities or notarize the app.
-It emits a ZIP, SHA-256 sidecar, and JSON size/provenance manifest. Cargo resolves
+It emits a drag-to-Applications DMG and an alternative ZIP, each with a SHA-256
+sidecar and JSON size/provenance manifest. The DMG manifest ends in `.dmg.json`
+to preserve the original ZIP manifest's filename. Cargo resolves
 the pinned dependency metadata to collect license files; an existing metadata
 JSON can be supplied as a fourth argument. Python 3 and macOS build tools are
 required. See [preview release notes](../docs/releases/v0.1.0-preview.1.md).
+
+To add a DMG to an existing release, extract its published ZIP and wrap that
+already signed app without rebuilding or modifying it:
+
+```sh
+bash packaging/macos/package-dmg.sh '/path/to/BitChat Desktop.app' /tmp/bitchat-dmg
+```
+
+The helper uses macOS `hdiutil`, creates a compressed HFS+ disk image with an
+Applications link, mounts it read-only, compares every app file with the input,
+and verifies the app signature both on the mounted image and after copying out.
+It refuses to overwrite an existing DMG. DMG packaging does not provide
+Developer ID signing or notarization.
 
 Planned outputs:
 - macOS: separate arm64 and x86_64 app archives where supported; optional universal build.

@@ -8,6 +8,10 @@ source_commit="${3:?Provide the commit used to build the executable}"
 version="0.1.0-preview.1"
 mkdir -p "$output_dir"
 output_dir="$(cd "$output_dir" && pwd)"
+for extension in zip dmg; do
+  existing="$output_dir/BitChat-Desktop-$version-macos-arm64.$extension"
+  [[ ! -e "$existing" ]] || { echo "Refusing to overwrite $existing" >&2; exit 1; }
+done
 stage="$(mktemp -d -t bitchat-preview)"
 trap 'rm -rf "$stage"' EXIT
 app="$stage/BitChat Desktop.app"
@@ -64,3 +68,4 @@ archive.with_suffix('.json').write_text(json.dumps(result, indent=2) + '\n')
 print(json.dumps(result, indent=2))
 PY
 echo "Archive ready: $output_dir/$artifact"
+bash "$repo/packaging/macos/package-dmg.sh" "$app" "$output_dir"
