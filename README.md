@@ -48,6 +48,14 @@ Open the macOS project:
 open apps/macos/BitChatDesktop.xcodeproj
 ```
 
+For a local build that handles Swift 6.4 compatibility, signs for testing, and opens the app:
+
+```sh
+bash apps/macos/scripts/build-local.sh --open
+```
+
+See the [macOS README](apps/macos/README.md) for local signing details.
+
 Select **BitChat Desktop (macOS)**. To build an unsigned Release application:
 
 ```sh

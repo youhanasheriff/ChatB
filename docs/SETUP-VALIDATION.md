@@ -25,3 +25,11 @@ After correcting the relocated relay CSV reference in commit `922e0ee`, [CI run 
 The rename updates repository links, the macOS product/project/scheme, bundle and app-group identifiers, visible app names, and Rust package names. The internal Swift module and Bitchat wire identifiers remain unchanged. Rust formatting, Clippy (warnings denied), Release compilation, all 20 Python tests, project/plist syntax, scheme paths, localization keys/placeholders, and the clean-command guard passed.
 
 The local full Release build with Xcode 27.0 resolved its packages but failed compiling the pinned `swift-secp256k1` 0.21.1 dependency: `UInt256.swift:215:21: ambiguous use of words`. The renamed application has not been launched or measured locally. [Rename CI run](https://github.com/youhanasheriff/bitchat-desktop/actions/runs/37475808687) tracks the corresponding GitHub build; its result must be checked separately from the earlier successful baseline.
+
+## Local macOS build available
+
+The local Apple Silicon Release build now succeeds with Xcode 27.0 after the compatibility patch implemented by `apps/macos/scripts/build-local.sh`. The script verifies the original dependency source SHA-256 before replacing the ambiguous `words` lookup with the identical `SIMDWrapper<Vector>(wrappedValue: vector)` expression used by its accessor. The upstream dependency remains pinned to 0.21.1. Only the ignored dependency checkout is patched.
+
+The repeat build command passed, the app was ad-hoc signed, `codesign --verify --deep --strict` passed, and Launch Services opened the app with its process running. The local signature retains the sandbox and device/network entitlements and omits the provisioned App Group entitlement. This is a local testing build, not a distribution signature. Bluetooth exchanges, the full application test suite, and long-running behavior remain unverified.
+
+Measured on 2026-10-06: the arm64 Release app bundle contains **22,439,296 bytes (22.4 MB / 21.4 MiB)** of logical file data, including its **19,267,648-byte** executable. This excludes build caches, debug symbols outside the bundle, and filesystem allocation overhead; it is not a compressed-download or universal-build measurement.

@@ -32,7 +32,7 @@ check: check-clean-safety
 
 build: check
     @echo "Building BitChat Desktop for macOS..."
-    @xcodebuild -project "{{project}}" -scheme "{{macos_scheme}}" -configuration Debug -derivedDataPath "{{derived_data}}" CODE_SIGNING_ALLOWED=NO build
+    @CONFIGURATION=Debug bash scripts/build-local.sh
 
 run: build
     @app="{{derived_data}}/Build/Products/Debug/BitChat Desktop.app"; test -d "$app" || (echo "❌ Built app not found at $app" && exit 1); open "$app"
