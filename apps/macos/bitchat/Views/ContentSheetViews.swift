@@ -27,6 +27,7 @@ struct ContentPeopleSheetView: View {
     @EnvironmentObject private var privateConversationModel: PrivateConversationModel
     @EnvironmentObject private var verificationModel: VerificationModel
     @EnvironmentObject private var conversationUIModel: ConversationUIModel
+    @EnvironmentObject private var sharedContentImportModel: SharedContentImportModel
     @Environment(\.scenePhase) private var scenePhase
 
     @Binding var showSidebar: Bool
@@ -45,6 +46,7 @@ struct ContentPeopleSheetView: View {
 
     let headerHeight: CGFloat
     let onSendMessage: () -> Void
+    var hasExternalRootPresentation = false
 
     #if os(iOS)
     @Binding var showImagePicker: Bool
@@ -72,14 +74,22 @@ struct ContentPeopleSheetView: View {
         )
     }
 
+    private var hasRootPresentation: Bool {
+        #if os(macOS)
+        hasExternalRootPresentation || sharedContentImportModel.offer != nil || ContentRootModalPresentationState(appChromeModel: appChromeModel).hasPresentation
+        #else
+        false
+        #endif
+    }
+
     private var hasModalPresentation: Bool {
-        modalPresentationState(includingVoiceAlert: true).hasPresentation
+        hasRootPresentation || modalPresentationState(includingVoiceAlert: true).hasPresentation
     }
 
     /// The voice alert cannot defer to itself: its own binding must keep
     /// reporting `true` while it is the presented modal.
     private var hasModalPresentationBesidesVoiceAlert: Bool {
-        modalPresentationState(includingVoiceAlert: false).hasPresentation
+        hasRootPresentation || modalPresentationState(includingVoiceAlert: false).hasPresentation
     }
 
     private var bluetoothAlertBinding: Binding<Bool> {
@@ -188,6 +198,7 @@ struct ContentPeopleSheetView: View {
             // would otherwise get no persistent signal that the radio is
             // off or tor is stalled. Mirror it here.
             .safeAreaInset(edge: .top, spacing: 0) {
+                if appChromeModel.panicWipeBlocked { PanicWipeBlockedBanner() }
                 if let issue = ConnectivityIssue.resolve(
                     bluetoothState: appChromeModel.bluetoothState,
                     torBlocked: appChromeModel.torBlocked
@@ -541,7 +552,9 @@ private struct ContentPrivateChatSheetView: View {
                     SheetCloseButton {
                         withAnimation(.easeInOut(duration: TransportConfig.uiAnimationMediumSeconds)) {
                             privateConversationModel.endConversation()
+                            #if os(iOS)
                             showSidebar = true
+                            #endif
                         }
                     }
                 }

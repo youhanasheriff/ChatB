@@ -25,6 +25,7 @@ struct ContentRootModalPresentationState {
     var isVoiceAlertPresented = false
     var isScreenshotPrivacyAlertPresented = false
     var isMediaPickerPresented = false
+    var isPanicConfirmationPresented = false
 
     var hasPresentation: Bool {
         isPeopleSheetPresented
@@ -37,6 +38,7 @@ struct ContentRootModalPresentationState {
             || isVoiceAlertPresented
             || isScreenshotPrivacyAlertPresented
             || isMediaPickerPresented
+            || isPanicConfirmationPresented
     }
 }
 
@@ -64,7 +66,8 @@ extension ContentRootModalPresentationState {
             isVoiceAlertPresented: isVoiceAlertPresented,
             isScreenshotPrivacyAlertPresented:
                 appChromeModel.showScreenshotPrivacyWarning,
-            isMediaPickerPresented: isMediaPickerPresented
+            isMediaPickerPresented: isMediaPickerPresented,
+            isPanicConfirmationPresented: appChromeModel.showPanicConfirmation
         )
     }
 }
@@ -106,6 +109,11 @@ struct ContentView: View {
     @Environment(\.appTheme) private var appTheme
     @Environment(\.scenePhase) private var scenePhase
     @State private var showSidebar = false
+    #if os(macOS)
+    @AppStorage("desktop.sidebarVisible") private var desktopSidebarVisible = true
+    @State private var clipboardImportError: String?
+    @State private var showDesktopTopology = false
+    #endif
     @State private var selectedMessageSender: String?
     @State private var selectedMessageSenderID: PeerID?
     @FocusState private var isNicknameFieldFocused: Bool
@@ -143,7 +151,11 @@ struct ContentView: View {
     private var usesGlassLayout: Bool { appTheme.usesGlassChrome }
 
     private var isPeopleSheetPresented: Bool {
+        #if os(macOS)
+        showSidebar
+        #else
         showSidebar || selectedPrivatePeerID != nil
+        #endif
     }
 
     private func rootModalPresentationState(
@@ -157,7 +169,9 @@ struct ContentView: View {
 
         return ContentRootModalPresentationState(
             appChromeModel: appChromeModel,
-            isPeopleSheetPresented: isPeopleSheetPresented,
+            // The private container owns recording/Bluetooth alerts even
+            // when it is an inline desktop pane rather than a sheet.
+            isPeopleSheetPresented: showSidebar || selectedPrivatePeerID != nil,
             isImagePreviewPresented: imagePreviewURL != nil,
             isVerificationSheetPresented: showVerifySheet,
             isVoiceAlertPresented: includingVoiceAlert && voiceRecordingVM.showAlert,
@@ -165,14 +179,22 @@ struct ContentView: View {
         )
     }
 
+    private var hasDesktopToolPresentation: Bool {
+        #if os(macOS)
+        clipboardImportError != nil || showDesktopTopology
+        #else
+        false
+        #endif
+    }
+
     private var hasRootModalPresentation: Bool {
-        rootModalPresentationState(includingVoiceAlert: true).hasPresentation
+        hasDesktopToolPresentation || sharedContentImportModel.offer != nil || rootModalPresentationState(includingVoiceAlert: true).hasPresentation
     }
 
     /// The voice alert cannot defer to itself: its own binding must keep
     /// reporting `true` while it is the presented modal.
     private var hasRootModalPresentationBesidesVoiceAlert: Bool {
-        rootModalPresentationState(includingVoiceAlert: false).hasPresentation
+        hasDesktopToolPresentation || sharedContentImportModel.offer != nil || rootModalPresentationState(includingVoiceAlert: false).hasPresentation
     }
 
     private var rootBluetoothAlertBinding: Binding<Bool> {
@@ -264,13 +286,17 @@ struct ContentView: View {
             }
         .background(ThemedRootBackground())
         .foregroundColor(palette.primary)
+        .tint(palette.accent)
         #if os(macOS)
-        .frame(minWidth: 600, minHeight: 400)
+        .frame(minWidth: 800, minHeight: 580)
         #endif
         .onChange(of: selectedPrivatePeerID) { newValue in
-            if newValue != nil {
-                showSidebar = true
-            }
+            #if os(iOS)
+            if newValue != nil { showSidebar = true }
+            #else
+            // Selecting a roster row closes the roster sheet and opens inline.
+            if newValue != nil { showSidebar = false }
+            #endif
             sharedContentImportModel.updateDestination(sharedContentDestination)
             switchComposerDraft(to: ComposerDraftStore.Key.from(
                 peerID: newValue,
@@ -309,11 +335,13 @@ struct ContentView: View {
                         // are not user requests to leave the conversation.
                         // Keep the selected DM so the sheet remains live
                         // when the app returns from Settings.
+                        #if os(iOS)
                         if scenePhase == .active,
                            !appChromeModel.showBluetoothAlert,
                            !voiceRecordingVM.showAlert {
                             privateConversationModel.endConversation()
                         }
+                        #endif
                     }
                 }
             )
@@ -347,6 +375,7 @@ struct ContentView: View {
             .environmentObject(peerListModel)
             .environmentObject(publicChatModel)
             .environmentObject(privateInboxModel)
+            .environmentObject(sharedContentImportModel)
             #else
             ContentPeopleSheetView(
                 showSidebar: $showSidebar,
@@ -372,7 +401,33 @@ struct ContentView: View {
             .environmentObject(peerListModel)
             .environmentObject(publicChatModel)
             .environmentObject(privateInboxModel)
+            .environmentObject(sharedContentImportModel)
             #endif
+        }
+        .sheet(isPresented: $appChromeModel.isLocationChannelsSheetPresented) {
+            LocationChannelsSheet(isPresented: $appChromeModel.isLocationChannelsSheetPresented)
+                .environmentObject(locationChannelsModel)
+                .environmentObject(peerListModel)
+        }
+        .sheet(
+            isPresented: $appChromeModel.isNoticesSheetPresented,
+            onDismiss: { appChromeModel.noticesSheetPrefersGeoTab = false }
+        ) {
+            NoticesView(
+                senderNickname: appChromeModel.nickname,
+                board: appChromeModel.boardManager,
+                initialTab: appChromeModel.noticesSheetPrefersGeoTab ? .geo : (locationChannelsModel.selectedChannel.isMesh ? .mesh : .geo)
+            )
+            .environmentObject(locationChannelsModel)
+        }
+        .alert("content.alert.screenshot.title", isPresented: $appChromeModel.showScreenshotPrivacyWarning) {
+            Button("common.ok", role: .cancel) {}
+        } message: {
+            Text("content.alert.screenshot.message")
+        }
+        .sheet(isPresented: $showVerifySheet) {
+            VerificationSheetView(isPresented: $showVerifySheet)
+                .environmentObject(verificationModel)
         }
         .sheet(isPresented: $appChromeModel.isAppInfoPresented) {
             AppInfoView(
@@ -454,6 +509,19 @@ struct ContentView: View {
         } message: {
             Text(appChromeModel.bluetoothAlertMessage)
         }
+        #if os(macOS)
+        .sheet(isPresented: $showDesktopTopology) {
+            MeshTopologyView(provider: { appChromeModel.meshTopologyDisplayModel() })
+        }
+        .alert("desktop.clipboard_error.title", isPresented: Binding(
+            get: { clipboardImportError != nil },
+            set: { if !$0 { clipboardImportError = nil } }
+        )) {
+            Button("common.ok", role: .cancel) { clipboardImportError = nil }
+        } message: {
+            Text(verbatim: clipboardImportError ?? "")
+        }
+        #endif
         .alert(
             String(localized: "share_import.review.title", comment: "Title for reviewing content received from the share extension"),
             isPresented: Binding(
@@ -482,6 +550,24 @@ struct ContentView: View {
             )
             Text(String(format: format, offer.destination.displayName) + "\n\n" + offer.payload.preview)
         }
+        // The desktop sidebar remains usable during a private conversation;
+        // host confirmation at the root so changing headers cannot remove it.
+        .confirmationDialog(
+            Text(
+                String(localized: "app_info.settings.danger.panic_confirm_title", defaultValue: "wipe all data?", comment: "Title of the confirmation dialog before a panic wipe")
+            ),
+            isPresented: $appChromeModel.showPanicConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(role: .destructive) {
+                appChromeModel.panicClearAllData()
+            } label: {
+                Text(
+                    String(localized: "app_info.settings.danger.panic_confirm_action", defaultValue: "wipe everything", comment: "Destructive confirmation button that performs the panic wipe")
+                )
+            }
+            Button("common.cancel", role: .cancel) {}
+        }
         .onDisappear {
             autocompleteDebounceTimer?.invalidate()
             appChromeModel.setPanicPreparation(nil)
@@ -493,6 +579,63 @@ struct ContentView: View {
     /// so the translucency gains usable space instead of losing it.
     @ViewBuilder
     private var mainContent: some View {
+        #if os(macOS)
+        HStack(spacing: 0) {
+            if desktopSidebarVisible {
+                DesktopSidebarView(showPeople: $showSidebar, showVerification: $showVerifySheet, onReviewClipboard: reviewClipboard, showTopology: $showDesktopTopology)
+                    .frame(width: 240)
+                Rectangle().fill(palette.divider).frame(width: 1)
+            }
+            VStack(spacing: 0) {
+                HStack {
+                    Button {
+                        desktopSidebarVisible.toggle()
+                    } label: {
+                        Image(systemName: "sidebar.left")
+                    }
+                    .buttonStyle(.plain)
+                    .help("Toggle sidebar (⌘\\)")
+                    .accessibilityLabel("Toggle sidebar")
+                    .keyboardShortcut("\\", modifiers: .command)
+                    Spacer()
+                }
+                .foregroundColor(palette.secondary)
+                .padding(.horizontal, 20)
+                .frame(height: 28)
+                if selectedPrivatePeerID != nil {
+                    desktopPrivatePane
+                } else {
+                    publicChatContent
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+        #else
+        publicChatContent
+        #endif
+    }
+
+    #if os(macOS)
+    private var desktopPrivatePane: some View {
+        ContentPeopleSheetView(
+            showSidebar: $showSidebar, messageText: $messageText,
+            selectedMessageSender: $selectedMessageSender,
+            selectedMessageSenderID: $selectedMessageSenderID,
+            imagePreviewURL: $imagePreviewURL, windowCountPublic: $windowCountPublic,
+            windowCountPrivate: $windowCountPrivate, isAtBottomPrivate: $isAtBottomPrivate,
+            isTextFieldFocused: $isTextFieldFocused, voiceRecordingVM: voiceRecordingVM,
+            autocompleteDebounceTimer: $autocompleteDebounceTimer,
+            headerHeight: 56, onSendMessage: sendMessage,
+            hasExternalRootPresentation: hasDesktopToolPresentation,
+            showMacImagePicker: $showMacImagePicker
+        )
+        // All navigation, consent, encryption and media behavior stays in the
+        // existing conversation container, now hosted beside the sidebar.
+    }
+    #endif
+
+    @ViewBuilder
+    private var publicChatContent: some View {
         if usesGlassLayout {
             publicMessageList
                 .safeAreaInset(edge: .top, spacing: 0) {
@@ -551,24 +694,7 @@ struct ContentView: View {
                 ConnectivityStatusBanner(issue: issue)
             }
         }
-        // Hosted here rather than on the logo Text so the pending dialog
-        // survives whatever happens to the header chrome.
-        .confirmationDialog(
-            Text(
-                String(localized: "app_info.settings.danger.panic_confirm_title", defaultValue: "wipe all data?", comment: "Title of the confirmation dialog before a panic wipe")
-            ),
-            isPresented: $appChromeModel.showPanicConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(role: .destructive) {
-                appChromeModel.panicClearAllData()
-            } label: {
-                Text(
-                    String(localized: "app_info.settings.danger.panic_confirm_action", defaultValue: "wipe everything", comment: "Destructive confirmation button that performs the panic wipe")
-                )
-            }
-            Button("common.cancel", role: .cancel) {}
-        }
+
     }
 
     private var publicMessageList: some View {
@@ -608,6 +734,20 @@ struct ContentView: View {
         )
         #endif
     }
+
+    #if os(macOS)
+    private func reviewClipboard() {
+        guard let text = NSPasteboard.general.string(forType: .string), !text.trimmed.isEmpty else {
+            clipboardImportError = String(localized: "desktop.clipboard_error.empty")
+            return
+        }
+        do {
+            try sharedContentImportModel.reviewLocal(.text(text), destination: sharedContentDestination)
+        } catch {
+            clipboardImportError = String(localized: "desktop.clipboard_error.invalid")
+        }
+    }
+    #endif
 
     private func sendMessage() {
         guard let trimmed = messageText.trimmedOrNilIfEmpty else { return }

@@ -40,9 +40,28 @@ struct ContentHeaderView: View {
         return bridgeService.bridgedPeerCount > 0
     }
 
+    private var headerTitle: String {
+        #if os(macOS)
+        switch locationChannelsModel.selectedChannel {
+        case .mesh: return "#mesh"
+        case .location(let channel): return "#\(channel.geohash)"
+        }
+        #else
+        return "BitChat Desktop"
+        #endif
+    }
+
+    private var headerIdentityHint: String {
+        #if os(macOS)
+        String(localized: "content.accessibility.location_channels")
+        #else
+        String(localized: "content.accessibility.app_info_hint")
+        #endif
+    }
+
     var body: some View {
         HStack(spacing: 0) {
-            Text(verbatim: "BitChat Desktop")
+            Text(verbatim: headerTitle)
                 .bitchatFont(size: 18, weight: .medium)
                 .lineLimit(1)
                 .foregroundColor(palette.primary)
@@ -59,7 +78,11 @@ struct ContentHeaderView: View {
                     appChromeModel.requestPanicWipe()
                 }
                 .onTapGesture(count: 1) {
+                    #if os(macOS)
+                    appChromeModel.isLocationChannelsSheetPresented = true
+                    #else
                     appChromeModel.presentAppInfo()
+                    #endif
                 }
                 // The confirmation dialog itself is hosted on ContentView
                 // (next to the failed-wipe banner), not on this Text: a host
@@ -70,12 +93,17 @@ struct ContentHeaderView: View {
                 // stays undiscoverable on purpose — it's destructive.)
                 .accessibilityAddTraits(.isButton)
                 .accessibilityHint(
-                    String(localized: "content.accessibility.app_info_hint", comment: "Accessibility hint on the BitChat Desktop logo explaining a tap opens app info")
+                    headerIdentityHint
                 )
                 .accessibilityAction {
+                    #if os(macOS)
+                    appChromeModel.isLocationChannelsSheetPresented = true
+                    #else
                     appChromeModel.presentAppInfo()
+                    #endif
                 }
 
+            #if os(iOS)
             HStack(spacing: 0) {
                 Text(verbatim: "@")
                     .bitchatFont(size: 14)
@@ -109,6 +137,8 @@ struct ContentHeaderView: View {
                     appChromeModel.validateAndSaveNickname()
                 }
             }
+
+            #endif
 
             Spacer()
 
@@ -311,10 +341,7 @@ struct ContentHeaderView: View {
                 )
             }
             .layoutPriority(3)
-            .sheet(isPresented: $showVerifySheet) {
-                VerificationSheetView(isPresented: $showVerifySheet)
-                    .environmentObject(verificationModel)
-            }
+
         }
         // Fixed height is load-bearing: children fill the bar with
         // .frame(maxHeight: .infinity) tap targets, so an open-ended
@@ -329,22 +356,6 @@ struct ContentHeaderView: View {
         .onReceive(BoardStore.shared.$postsSnapshot) { posts in
             boardPosts = posts
         }
-        .sheet(isPresented: $appChromeModel.isLocationChannelsSheetPresented) {
-            LocationChannelsSheet(isPresented: $appChromeModel.isLocationChannelsSheetPresented)
-                .environmentObject(locationChannelsModel)
-                .environmentObject(peerListModel)
-        }
-        .sheet(
-            isPresented: $appChromeModel.isNoticesSheetPresented,
-            onDismiss: { appChromeModel.noticesSheetPrefersGeoTab = false }
-        ) {
-            NoticesView(
-                senderNickname: appChromeModel.nickname,
-                board: appChromeModel.boardManager,
-                initialTab: initialNoticesTab
-            )
-            .environmentObject(locationChannelsModel)
-        }
         .onAppear {
             locationChannelsModel.refreshMeshChannelsIfNeeded()
         }
@@ -353,11 +364,6 @@ struct ContentHeaderView: View {
         }
         .onChange(of: locationChannelsModel.permissionState) { _ in
             locationChannelsModel.refreshMeshChannelsIfNeeded()
-        }
-        .alert("content.alert.screenshot.title", isPresented: $appChromeModel.showScreenshotPrivacyWarning) {
-            Button("common.ok", role: .cancel) {}
-        } message: {
-            Text("content.alert.screenshot.message")
         }
         .confirmationDialog(
             String(localized: "channel.share.precision_warning.title", defaultValue: "share a precise location channel?", comment: "Title of the confirmation before sharing a neighborhood-or-finer geohash invite"),
@@ -404,19 +410,6 @@ private extension View {
 private extension ContentHeaderView {
     var headerLineLimit: Int? {
         dynamicTypeSize.isAccessibilitySize ? 2 : 1
-    }
-
-    /// Open the notices sheet on the tab matching the current channel: the
-    /// geohash channel's notices, or the mesh-local board in mesh chat. An
-    /// explicit geo-tab request (the "notes left here" hint) wins.
-    var initialNoticesTab: NoticesView.Tab {
-        if appChromeModel.noticesSheetPrefersGeoTab {
-            return .geo
-        }
-        if case .location = locationChannelsModel.selectedChannel {
-            return .geo
-        }
-        return .mesh
     }
 
     /// The geo scope the notices sheet would open on: the selected location

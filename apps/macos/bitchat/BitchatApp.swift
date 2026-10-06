@@ -32,6 +32,7 @@ struct BitchatApp: App {
         WindowGroup("BitChat Desktop") {
             ContentView()
                 .environment(\.appTheme, AppTheme(rawValue: appThemeRawValue) ?? .matrix)
+                .preferredColorScheme((AppTheme(rawValue: appThemeRawValue) ?? .matrix).preferredColorScheme)
                 .environmentObject(runtime.publicChatModel)
                 .environmentObject(runtime.privateInboxModel)
                 .environmentObject(runtime.privateConversationModel)
@@ -64,7 +65,17 @@ struct BitchatApp: App {
         }
         #if os(macOS)
         .windowStyle(.hiddenTitleBar)
-        .windowResizability(.contentSize)
+        .windowResizability(.contentMinSize)
+        .defaultSize(width: 1060, height: 740)
+        .commands {
+            CommandGroup(replacing: .appSettings) {
+                Button("desktop.sidebar.settings") {
+                    UserDefaults.standard.set("settings", forKey: "appInfo.selectedPane")
+                    runtime.appChromeModel.presentAppInfo()
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+        }
         #endif
     }
 }

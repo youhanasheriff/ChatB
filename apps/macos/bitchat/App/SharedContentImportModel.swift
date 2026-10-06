@@ -55,9 +55,17 @@ final class SharedContentImportModel: ObservableObject {
     @Published private(set) var offer: SharedContentOffer?
 
     private let store: SharedContentStore?
+    /// Desktop clipboard review is ephemeral; it does not need an App Group.
+    private var localPayload: SharedContentPayload?
 
     init(store: SharedContentStore?) {
         self.store = store
+    }
+
+    func reviewLocal(_ payload: SharedContentPayload, destination: SharedContentDestination) throws {
+        try payload.validate()
+        localPayload = payload
+        offer = SharedContentOffer(payload: payload, destination: destination)
     }
 
     @discardableResult
@@ -65,6 +73,15 @@ final class SharedContentImportModel: ObservableObject {
         destination: SharedContentDestination,
         now: Date = Date()
     ) -> SharedContentPayload? {
+        if let localPayload {
+            guard (try? localPayload.validate(now: now)) != nil else {
+                self.localPayload = nil
+                offer = nil
+                return nil
+            }
+            offer = SharedContentOffer(payload: localPayload, destination: destination)
+            return localPayload
+        }
         guard let payload = store?.pending(now: now) else {
             offer = nil
             return nil
@@ -94,6 +111,12 @@ final class SharedContentImportModel: ObservableObject {
             updateDestination(destination)
             return nil
         }
+        if let localPayload, localPayload.id == offer.id {
+            self.localPayload = nil
+            self.offer = nil
+            guard (try? localPayload.validate(now: now)) != nil else { return nil }
+            return localPayload.composerText
+        }
         guard let payload = store?.consume(id: offer.id, now: now) else {
             _ = refresh(destination: destination, now: now)
             return nil
@@ -105,6 +128,7 @@ final class SharedContentImportModel: ObservableObject {
 
     func cancel(destination: SharedContentDestination, now: Date = Date()) {
         guard let offer else { return }
+        if localPayload?.id == offer.id { localPayload = nil }
         store?.discard(id: offer.id)
         self.offer = nil
         // If a newer share replaced the reviewed envelope, surface it rather
@@ -114,6 +138,7 @@ final class SharedContentImportModel: ObservableObject {
 
     func discardAll() {
         store?.discardAll()
+        localPayload = nil
         offer = nil
     }
 }

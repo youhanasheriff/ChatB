@@ -164,7 +164,11 @@ struct QRScanView: View {
                 .bitchatFont(size: 14, weight: .medium)
             TextEditor(text: $input)
                 .frame(height: 100)
-                .border(palette.secondary.opacity(0.4))
+                .scrollContentBackground(.hidden)
+                .bitchatFont(size: 12)
+                .padding(10)
+                .background(palette.panel)
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(palette.divider, lineWidth: 1))
             Button(Strings.validate) {
                 handleScannedCode(input, announceResult: true)
             }
@@ -413,6 +417,12 @@ struct VerificationSheetView: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            #if os(macOS)
+            DesktopSheetHeader(title: "verification.sheet.title", onClose: {
+                showingScanner = false
+                isPresented = false
+            })
+            #else
             // Top header (always at top)
             HStack {
                 Text("verification.sheet.title")
@@ -430,8 +440,11 @@ struct VerificationSheetView: View {
             .padding(.bottom, 8)
 
             Divider()
+            #endif
 
-            // Content area
+            // Keep camera, paste fallback and long QR payloads reachable in
+            // smaller desktop windows and at larger accessibility text sizes.
+            ScrollView {
             Group {
                 if showingScanner {
                     VStack(alignment: .leading, spacing: 12) {
@@ -457,6 +470,8 @@ struct VerificationSheetView: View {
             }
             .padding(16)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+
+            }
 
             // Centered controls moved up
             VStack(spacing: 10) {
@@ -490,6 +505,9 @@ struct VerificationSheetView: View {
             .padding(.vertical, 14)
         }
         .themedSheetBackground()
+        #if os(macOS)
+        .frame(minWidth: 520, idealWidth: 600, minHeight: 580, idealHeight: 700)
+        #endif
         .onDisappear { showingScanner = false }
     }
 }

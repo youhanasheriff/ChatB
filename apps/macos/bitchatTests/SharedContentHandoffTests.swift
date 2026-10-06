@@ -5,6 +5,35 @@ import Testing
 
 @Suite("Share extension handoff", .serialized)
 struct SharedContentHandoffTests {
+    @MainActor
+    @Test("Desktop clipboard review requires confirmation for the current destination")
+    func localReviewRequiresCurrentDestination() throws {
+        let model = SharedContentImportModel(store: nil)
+        let text = "A link to review: https://example.com/ café 👋"
+        try model.reviewLocal(.text(text), destination: .mesh)
+        #expect(model.offer?.payload.content == text)
+        #expect(model.confirm(destination: .geohash("u4pruy")) == nil)
+        #expect(model.offer?.destination == .geohash("u4pruy"))
+        #expect(model.confirm(destination: .geohash("u4pruy")) == text)
+        #expect(model.offer == nil)
+        #expect(model.confirm(destination: .mesh) == nil)
+
+        try model.reviewLocal(.text("cancel me"), destination: .mesh)
+        model.cancel(destination: .mesh)
+        #expect(model.offer == nil)
+        #expect(model.refresh(destination: .mesh) == nil)
+    }
+
+    @MainActor
+    @Test("Desktop review rejects oversized clipboard content before offering it")
+    func localReviewRejectsOversizedContent() {
+        let model = SharedContentImportModel(store: nil)
+        #expect(throws: SharedContentHandoffError.contentTooLarge) {
+            try model.reviewLocal(.text(String(repeating: "x", count: SharedContentPayload.maxContentBytes + 1)), destination: .mesh)
+        }
+        #expect(model.offer == nil)
+    }
+
     private func makeStore() -> (suite: String, defaults: UserDefaults, store: SharedContentStore) {
         let suite = "SharedContentHandoffTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!

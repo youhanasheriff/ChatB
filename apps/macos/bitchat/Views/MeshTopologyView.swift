@@ -39,24 +39,11 @@ struct MeshTopologyView: View {
     var body: some View {
         #if os(macOS)
         VStack(spacing: 0) {
-            HStack {
-                Text("topology.title")
-                    .bitchatFont(size: 16, weight: .bold)
-                    .foregroundColor(palette.primary)
-                Spacer()
-                refreshButton
-                Button("app_info.done") {
-                    dismiss()
-                }
-                .buttonStyle(.plain)
-                .foregroundColor(palette.primary)
-            }
-            .padding()
-            .themedSurface(opacity: 0.95)
+            DesktopSheetHeader(title: "topology.title", onRefresh: { model = provider() }, onClose: { dismiss() })
 
             content
         }
-        .frame(width: 500, height: 520)
+        .frame(minWidth: 520, idealWidth: 640, minHeight: 520, idealHeight: 620)
         .themedSheetBackground()
         #else
         NavigationView {

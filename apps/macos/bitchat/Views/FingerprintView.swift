@@ -66,6 +66,9 @@ struct FingerprintView: View {
         let fingerprintState = verificationModel.fingerprintPresentation(for: peerID)
 
         VStack(spacing: 20) {
+            #if os(macOS)
+            DesktopSheetHeader(title: Strings.title, onClose: { dismiss() })
+            #else
             // Header
             HStack {
                 Text(Strings.title)
@@ -79,6 +82,8 @@ struct FingerprintView: View {
             }
             .padding()
             
+            #endif
+            ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
                     if let icon = fingerprintState.encryptionStatus.icon {
@@ -279,12 +284,15 @@ struct FingerprintView: View {
             }
             .padding()
             .frame(maxWidth: 500) // Constrain max width for better readability
-            
-            Spacer()
+            .frame(maxWidth: .infinity)
+            }
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .themedSheetBackground()
+        #if os(macOS)
+        .frame(minWidth: 520, idealWidth: 600, minHeight: 520, idealHeight: 680)
+        #endif
         .onAppear {
             syncAliasDraft(from: fingerprintState, force: true)
         }

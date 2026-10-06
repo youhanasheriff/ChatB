@@ -8,7 +8,7 @@ Read the [vision and mission](docs/VISION-AND-MISSION.md) and the [implementatio
 
 ## Current status
 
-- **macOS:** the upstream SwiftUI/CoreBluetooth implementation is retained in `apps/macos`, with a BitChat Desktop application product and separate bundle identity. The inherited macOS Release build passed CI after the monorepo move; application launch and hardware interoperability remain to be verified.
+- **macOS:** the upstream SwiftUI/CoreBluetooth implementation is retained in `apps/macos`, with a BitChat Desktop application product and separate bundle identity. The native macOS app builds and launches locally with the desktop UI, three study palettes, and Bubble / Terminal chats. See the [UI checklist](docs/UI-IMPLEMENTATION.md) and [validation notes](docs/SETUP-VALIDATION.md). Hardware interoperability remains to be verified.
 - **Windows:** native Win32 client planned; directory scaffold only.
 - **Linux:** native GTK4 client planned; directory scaffold only.
 - **Shared Rust core:** workspace scaffolding only. Packet codecs, cryptography, routing, and Nostr implementation have not yet been ported or connected to the macOS app.

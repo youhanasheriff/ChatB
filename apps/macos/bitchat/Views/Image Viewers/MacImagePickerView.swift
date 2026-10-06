@@ -13,6 +13,7 @@ import SwiftUI
 struct MacImagePickerView: View {
     let completion: (URL?) -> Void
     @Environment(\.dismiss) private var dismiss
+    @ThemedPalette private var palette
 
     private enum Strings {
         static let title: LocalizedStringKey = "mac.image_picker.title"
@@ -22,9 +23,13 @@ struct MacImagePickerView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text(Strings.title)
-                .font(.headline)
+        VStack(spacing: 0) {
+            DesktopSheetHeader(title: Strings.title, onClose: { completion(nil) })
+            VStack(spacing: 20) {
+            Image(systemName: "photo.on.rectangle.angled")
+                .font(.system(size: 42, weight: .light))
+                .foregroundColor(palette.accent)
+            Text(Strings.title).bitchatFont(size: 15, weight: .medium)
 
             Button(Strings.select) {
                 let panel = NSOpenPanel()
@@ -46,9 +51,13 @@ struct MacImagePickerView: View {
                 completion(nil)
             }
             .buttonStyle(.bordered)
+            }
+            .padding(40)
         }
-        .padding(40)
-        .frame(minWidth: 300, minHeight: 150)
+        .frame(minWidth: 520, idealWidth: 600, minHeight: 340)
+        .foregroundColor(palette.primary)
+        .tint(palette.accent)
+        .themedSheetBackground()
     }
 }
 

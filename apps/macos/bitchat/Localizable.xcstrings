@@ -1,6 +1,358 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "desktop.screenshot_privacy": {
+      "comment": "Desktop navigation and privacy information.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screenshots & privacy"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.about": {
+      "comment": "Desktop navigation and privacy information.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About BitChat Desktop"
+          }
+        }
+      }
+    }
+,
+    "desktop.sidebar.review_clipboard": {
+      "comment": "Desktop clipboard review; import requires confirmation and never sends automatically.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review clipboard"
+          }
+        }
+      }
+    },
+    "desktop.clipboard_error.title": {
+      "comment": "Desktop clipboard review; import requires confirmation and never sends automatically.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clipboard unavailable"
+          }
+        }
+      }
+    },
+    "desktop.clipboard_error.empty": {
+      "comment": "Desktop clipboard review; import requires confirmation and never sends automatically.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy some text or a link, then try again."
+          }
+        }
+      }
+    },
+    "desktop.clipboard_error.invalid": {
+      "comment": "Desktop clipboard review; import requires confirmation and never sends automatically.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The clipboard contains unsupported characters or more than 16 KB of text."
+          }
+        }
+      }
+    }
+,
+    "desktop.settings_info": {
+      "comment": "Native desktop sheet title.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings & information"
+          }
+        }
+      }
+    },
+    "desktop.image_preview": {
+      "comment": "Native desktop sheet title.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image preview"
+          }
+        }
+      }
+    }
+,
+    "app_info.appearance.terminal": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminal"
+          }
+        }
+      }
+    },
+    "app_info.appearance.native_light": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Native Light"
+          }
+        }
+      }
+    },
+    "app_info.appearance.graphite": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graphite"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.tagline": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peer-to-peer messaging"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.search": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find a person…"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.clear_search": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear search"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.channels": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CHANNELS"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.browse_channels": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Browse channels"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.people": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PEOPLE"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.all_people": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All people"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.no_people": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Waiting for nearby people…"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.groups": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GROUPS"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.tools": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TOOLS"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.notices": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notices"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.verify": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verify identity"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.topology": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mesh topology"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.settings": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.fingerprint": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View fingerprint"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.nickname": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your nickname"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.bluetooth_on": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth is on"
+          }
+        }
+      }
+    },
+    "desktop.sidebar.bluetooth_unavailable": {
+      "comment": "Native desktop appearance and navigation.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bluetooth unavailable"
+          }
+        }
+      }
+    }
+,
     "app_info.chat_style.bubble" : {
       "comment": "Chat message layout preference, independent of appearance theme.",
       "extractionState": "manual",

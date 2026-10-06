@@ -276,7 +276,7 @@
     "title": "Screenshot privacy notice",
     "category": "States & dialogs",
     "type": "dialog",
-    "source": "ContentHeaderView.swift",
+    "source": "ContentView.swift + AppInfoView.swift",
     "description": "Explain the existing screenshot privacy limitation."
   },
   {
@@ -292,7 +292,7 @@
     "title": "Review shared content",
     "category": "States & dialogs",
     "type": "dialog",
-    "source": "ContentView.swift / sharedContentImportModel",
-    "description": "Inherited share-import review; the iOS share extension is outside desktop product scope."
+    "source": "ContentView.swift + SharedContentImportModel.swift",
+    "description": "Desktop clipboard review confirms the active destination before replacing the composer; never sends automatically."
   }
 ]

@@ -15,6 +15,7 @@ struct ImagePreviewView: View {
     let url: URL
 
     @Environment(\.dismiss) private var dismiss
+    @ThemedPalette private var palette
     #if os(iOS)
     @State private var showExporter = false
     @State private var platformImage: UIImage?
@@ -25,7 +26,10 @@ struct ImagePreviewView: View {
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            VStack {
+            VStack(spacing: 0) {
+                #if os(macOS)
+                DesktopSheetHeader(title: "desktop.image_preview", onClose: { dismiss() })
+                #endif
                 Spacer()
                 if let image = platformImage {
                     #if os(iOS)
@@ -57,16 +61,19 @@ struct ImagePreviewView: View {
                     Spacer()
                     Button(action: saveCopy) {
                         Text("save", comment: "Button to save media to device")
-                            .font(.bitchatSystem(size: 15, weight: .semibold))
-                            .foregroundColor(.white)
+                            .bitchatFont(size: 15, weight: .semibold)
+                            .foregroundColor(palette.background)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 8)
-                            .background(RoundedRectangle(cornerRadius: 12).fill(Color.blue.opacity(0.6)))
+                            .background(RoundedRectangle(cornerRadius: 12).fill(palette.accent.opacity(0.85)))
                     }
                 }
                 .padding([.horizontal, .bottom], 24)
             }
         }
+        #if os(macOS)
+        .frame(minWidth: 600, idealWidth: 800, minHeight: 520, idealHeight: 680)
+        #endif
         .onAppear(perform: loadImage)
         #if os(iOS)
         .sheet(isPresented: $showExporter) {

@@ -31,6 +31,7 @@ struct AppInfoView: View {
     /// introduction), and afterwards the sheet reopens wherever it was left.
     @AppStorage("appInfo.selectedPane") private var selectedPane: Pane = .info
     @State private var showPanicConfirmation = false
+    @State private var showScreenshotPrivacyInfo = false
     @AppStorage(AppLanguageSettings.overrideKey) private var languageOverride = ""
     /// The override changed this session; localization resolves at process
     /// start, so surface the restart hint.
@@ -253,17 +254,7 @@ struct AppInfoView: View {
     var body: some View {
         #if os(macOS)
         VStack(spacing: 0) {
-            // Custom header for macOS
-            HStack {
-                Spacer()
-                Button("app_info.done") {
-                    dismiss()
-                }
-                .buttonStyle(.plain)
-                .foregroundColor(textColor)
-                .padding()
-            }
-            .themedSurface(opacity: 0.95)
+            DesktopSheetHeader(title: "desktop.settings_info", onClose: { dismiss() })
 
             VStack(spacing: 0) {
                 panePicker
@@ -274,7 +265,7 @@ struct AppInfoView: View {
             }
             .themedSheetBackground()
         }
-        .frame(width: 600, height: 700)
+        .frame(minWidth: 600, idealWidth: 640, minHeight: 520, idealHeight: 700)
         .sheet(isPresented: $showTopology) {
             if let topologyProvider {
                 MeshTopologyView(provider: topologyProvider)
@@ -334,27 +325,15 @@ struct AppInfoView: View {
     @ViewBuilder
     private var settingsContent: some View {
         VStack(alignment: .leading, spacing: 24) {
-            // Appearance — single row: label left, theme chips right
-            HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 12) {
                 SectionHeader(Strings.appearanceTitle)
-                Spacer()
-                ForEach(AppTheme.allCases) { theme in
-                    Button {
-                        appThemeRawValue = theme.rawValue
-                    } label: {
-                        Text(theme.displayNameKey)
-                            .bitchatFont(size: 13, weight: selectedTheme == theme ? .semibold : .regular)
-                            .foregroundColor(selectedTheme == theme ? palette.accent : secondaryTextColor)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .fill(selectedTheme == theme ? palette.accent.opacity(0.15) : Color.clear)
-                            )
-                            .contentShape(Rectangle())
+                settingsCard {
+                    Picker(Strings.appearanceTitle, selection: $appThemeRawValue) {
+                        ForEach(AppTheme.allCases) { theme in
+                            Text(theme.displayNameKey).tag(theme.rawValue)
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(selectedTheme == theme ? .isSelected : [])
+                    .pickerStyle(.segmented)
                 }
             }
 
@@ -559,6 +538,15 @@ struct AppInfoView: View {
                             }
                         )
                     )
+                    Button("desktop.screenshot_privacy") { showScreenshotPrivacyInfo = true }
+                        .buttonStyle(.plain)
+                        .bitchatFont(size: 12)
+                        .foregroundColor(palette.accent)
+                        .alert("content.alert.screenshot.title", isPresented: $showScreenshotPrivacyInfo) {
+                            Button("common.ok", role: .cancel) {}
+                        } message: {
+                            Text("content.alert.screenshot.message")
+                        }
                 }
             }
 

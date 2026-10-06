@@ -12,6 +12,8 @@ import SwiftUI
 enum AppTheme: String, CaseIterable, Identifiable {
     case matrix
     case liquidGlass
+    case nativeLight
+    case graphite
 
     var id: String { rawValue }
 
@@ -20,8 +22,25 @@ enum AppTheme: String, CaseIterable, Identifiable {
 
     var displayNameKey: LocalizedStringKey {
         switch self {
-        case .matrix: return "app_info.appearance.matrix"
+        case .matrix: return "app_info.appearance.terminal"
+        case .nativeLight: return "app_info.appearance.native_light"
+        case .graphite: return "app_info.appearance.graphite"
         case .liquidGlass: return "app_info.appearance.liquid_glass"
+        }
+    }
+
+    /// Explicit study palettes are stable across the system appearance.
+    var preferredColorScheme: ColorScheme? {
+        switch self {
+        case .nativeLight: return .light
+        case .graphite: return .dark
+        case .matrix:
+            #if os(macOS)
+            return .dark
+            #else
+            return nil
+            #endif
+        case .liquidGlass: return nil
         }
     }
 
@@ -30,7 +49,7 @@ enum AppTheme: String, CaseIterable, Identifiable {
     var bodyFontDesign: Font.Design {
         switch self {
         case .matrix: return .monospaced
-        case .liquidGlass: return .default
+        case .liquidGlass, .nativeLight, .graphite: return .default
         }
     }
 
@@ -47,6 +66,8 @@ enum AppTheme: String, CaseIterable, Identifiable {
         switch self {
         case .matrix: return ""
         case .liquidGlass: return "lg:"
+        case .nativeLight: return "nl:"
+        case .graphite: return "gr:"
         }
     }
 
@@ -57,6 +78,10 @@ enum AppTheme: String, CaseIterable, Identifiable {
             return .matrix(colorScheme)
         case .liquidGlass:
             return .liquidGlass(colorScheme)
+        case .nativeLight:
+            return .desktopLight
+        case .graphite:
+            return .desktopGraphite
         }
     }
 }
@@ -81,7 +106,40 @@ struct ThemePalette {
     /// Hairline separators.
     let divider: Color
 
+    /// Sidebar and cards share a quiet surface distinct from the timeline.
+    var panel: Color { secondary.opacity(0.065) }
+    var selection: Color { accent.opacity(0.13) }
+
+    static let desktopTerminal = desktop(
+        background: 0x0c1110, primary: 0xd7e0da, secondary: 0x84998c,
+        accent: 0x84ee96, divider: 0x2c3831
+    )
+    static let desktopLight = desktop(
+        background: 0xffffff, primary: 0x26372d, secondary: 0x758277,
+        accent: 0x257e56, divider: 0xe1e7de
+    )
+    static let desktopGraphite = desktop(
+        background: 0x1a1f24, primary: 0xe0e5e9, secondary: 0x8f9ba5,
+        accent: 0x88cbd3, divider: 0x343d46
+    )
+
+    private static func desktop(background: UInt32, primary: UInt32, secondary: UInt32,
+                                accent: UInt32, divider: UInt32) -> ThemePalette {
+        func color(_ hex: UInt32) -> Color {
+            Color(red: Double((hex >> 16) & 255) / 255,
+                  green: Double((hex >> 8) & 255) / 255,
+                  blue: Double(hex & 255) / 255)
+        }
+        return ThemePalette(background: color(background), primary: color(primary),
+                            secondary: color(secondary), accent: color(accent),
+                            locationAccent: color(accent), accentBlue: color(0x65aee7),
+                            alertRed: color(0xef7272), divider: color(divider))
+    }
+
     static func matrix(_ colorScheme: ColorScheme) -> ThemePalette {
+        #if os(macOS)
+        return .desktopTerminal
+        #else
         let isDark = colorScheme == .dark
         let green = isDark ? Color.green : Color(red: 0, green: 0.5, blue: 0)
         return ThemePalette(
@@ -94,6 +152,7 @@ struct ThemePalette {
             alertRed: Color(red: 0.75, green: 0.1, blue: 0.1),
             divider: isDark ? Color.white.opacity(0.12) : Color.black.opacity(0.08)
         )
+        #endif
     }
 
     static func liquidGlass(_: ColorScheme) -> ThemePalette {

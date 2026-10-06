@@ -557,6 +557,55 @@ struct ViewSmokeTests {
         #expect(featureModels.privateConversationModel.selectedHeaderState?.headerPeerID == peerID)
     }
 
+    #if os(macOS)
+    @Test("Desktop themes render at minimum size and keep the selected inline chat")
+    func desktopShell_rendersThemesAndInlineConversation() async throws {
+        let (viewModel, transport, _) = makeSmokeViewModel()
+        let models = makeSmokeFeatureModels(for: viewModel)
+        let peerID = PeerID(str: "6162636465666768")
+        transport.updatePeerSnapshots([makeSnapshot(peerID: peerID, nickname: "Alice", noiseByte: 0x67)])
+        try await Task.sleep(for: .milliseconds(50))
+
+        for theme in [AppTheme.matrix, .nativeLight, .graphite] {
+            let root = installSmokeEnvironment(ContentView(), featureModels: models)
+                .environment(\.appTheme, theme)
+                .environment(\.colorScheme, theme.preferredColorScheme ?? .dark)
+            let controller = NSHostingController(rootView: root)
+            let host = controller.view
+            host.frame = NSRect(x: 0, y: 0, width: 1060, height: 740)
+            host.layoutSubtreeIfNeeded()
+            // Local visual artifacts contain only the mock transport roster.
+            if let bitmap = host.bitmapImageRepForCachingDisplay(in: host.bounds) {
+                host.cacheDisplay(in: host.bounds, to: bitmap)
+                if let png = bitmap.representation(using: .png, properties: [:]) {
+                    try png.write(to: URL(fileURLWithPath: "/tmp/bitchat-desktop-\(theme.rawValue).png"))
+                }
+            }
+            host.frame = NSRect(x: 0, y: 0, width: 800, height: 580)
+            host.layoutSubtreeIfNeeded()
+            let publicSize = controller.sizeThatFits(in: CGSize(width: 800, height: 580))
+            #expect(publicSize.width <= 800)
+            #expect(publicSize.height <= 580)
+
+            models.privateConversationModel.startConversation(with: peerID)
+            try await Task.sleep(for: .milliseconds(50))
+            host.layoutSubtreeIfNeeded()
+            #expect(models.privateConversationModel.selectedPeerID == peerID)
+            let privateSize = controller.sizeThatFits(in: CGSize(width: 800, height: 580))
+            #expect(privateSize.width <= 800)
+            #expect(privateSize.height <= 580)
+
+            // Returning through the desktop channel coordinator keeps the
+            // same public model and clears the inline private selection.
+            models.privateConversationModel.endConversation()
+            models.locationChannelsModel.select(.mesh)
+            try await Task.sleep(for: .milliseconds(50))
+            host.layoutSubtreeIfNeeded()
+            #expect(models.privateConversationModel.selectedPeerID == nil)
+        }
+    }
+    #endif
+
     @Test("Root Bluetooth alert waits for location and notices sheets")
     func rootBluetoothAlertGuard_includesHeaderSheets() {
         #expect(!ContentRootModalPresentationState().hasPresentation)
@@ -735,6 +784,17 @@ struct ViewSmokeTests {
         _ = mount(waveformView)
         _ = mount(imageView)
         _ = mount(voiceNoteView)
+        _ = mount(ImagePreviewView(url: imageURL))
+        #if os(macOS)
+        _ = mount(MacImagePickerView(completion: { _ in }))
+        _ = mount(MeshTopologyView(provider: { .empty }))
+        #endif
+        _ = mount(LiveVoiceBadge())
+        _ = mount(ConnectivityStatusBanner(issue: .bluetoothOff))
+        _ = mount(ConnectivityStatusBanner(issue: .bluetoothDenied))
+        _ = mount(ConnectivityStatusBanner(issue: .bluetoothUnsupported))
+        _ = mount(ConnectivityStatusBanner(issue: .torBlocked))
+        _ = mount(PanicWipeBlockedBanner())
 
         let bins = await withCheckedContinuation { continuation in
             WaveformCache.shared.waveform(for: waveformProbeURL, bins: 16) { values in

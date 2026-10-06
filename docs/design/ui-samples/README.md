@@ -22,7 +22,7 @@ The complete original prompts are in [image-prompts.json](image-prompts.json). G
 
 [screen-inventory.json](screen-inventory.json) maps the 37 entries to existing Swift views. Reusable views such as the message composer, delivery indicators, voice controls, and media items appear in their host conversation. Settings sections are shown individually for review, though the current app groups them in one sheet. System file/share dialogs are represented by a sample native selection or confirmation surface. The inherited share-import review is included for completeness; its iOS share extension is outside the desktop product scope.
 
-These samples propose desktop navigation and styling. They do not implement any change in the running native application. The gallery's three directions are alternatives; they are not a promise to ship three new themes. A selected direction should be implemented with native controls, system fonts, and vector icons to preserve the small application footprint. Generated PNGs belong only to design documentation and should not be bundled in the app.
+The macOS application now implements the shared desktop navigation, all three study palettes, and the persistent Bubble / Terminal setting. The [implementation checklist](../../UI-IMPLEMENTATION.md) accounts for every screen/state and records platform limits. Existing native workflows and system dialogs are retained. Generated PNGs belong only to design documentation and are not bundled in the app. Windows and Linux UI work is still pending.
 
 ## Validation
 
