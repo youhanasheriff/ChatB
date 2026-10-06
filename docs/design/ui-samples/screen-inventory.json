@@ -1,0 +1,298 @@
+[
+  {
+    "id": "mesh",
+    "title": "Mesh chat",
+    "category": "Conversations",
+    "type": "chat",
+    "source": "ContentView.swift + MessageListView.swift",
+    "description": "The public nearby channel; keep transport, time, and sender easy to scan."
+  },
+  {
+    "id": "location-chat",
+    "title": "Location conversation",
+    "category": "Conversations",
+    "type": "chat",
+    "source": "ContentView.swift + LocationChannelsSheet.swift",
+    "description": "Public conversation selected by geohash, with scope made explicit."
+  },
+  {
+    "id": "private",
+    "title": "Private conversation",
+    "category": "Conversations",
+    "type": "chat",
+    "source": "ContentSheetViews.swift",
+    "description": "Private chat separates encryption status from identity verification."
+  },
+  {
+    "id": "media-chat",
+    "title": "Attachments & voice messages",
+    "category": "Conversations",
+    "type": "chat",
+    "source": "Media/MediaMessageView.swift + Media/VoiceNoteView.swift",
+    "description": "Image, file, and voice content belong in the conversation, not a separate destination."
+  },
+  {
+    "id": "recording",
+    "title": "Voice recording",
+    "category": "Conversations",
+    "type": "chat",
+    "source": "ContentComposerView.swift + Media/WaveformView.swift",
+    "description": "Recording, cancel, and send states in the existing composer."
+  },
+  {
+    "id": "live-voice",
+    "title": "Live voice",
+    "category": "Conversations",
+    "type": "chat",
+    "source": "Media/LiveVoiceBadge.swift",
+    "description": "The current live-voice indicator and controls within a conversation."
+  },
+  {
+    "id": "people",
+    "title": "Nearby people",
+    "category": "People & identity",
+    "type": "list",
+    "source": "ContentSheetViews.swift + MeshPeerList.swift",
+    "description": "Mesh people list with explicit reachable and verification states."
+  },
+  {
+    "id": "bridge",
+    "title": "Across the bridge",
+    "category": "People & identity",
+    "type": "list",
+    "source": "BridgePeopleList.swift",
+    "description": "People reached through the mesh bridge, clearly separated from direct radio peers."
+  },
+  {
+    "id": "recent",
+    "title": "Recent conversations",
+    "category": "People & identity",
+    "type": "list",
+    "source": "RecentChatList.swift",
+    "description": "Recent conversations remain reachable as channels change."
+  },
+  {
+    "id": "groups",
+    "title": "Groups",
+    "category": "People & identity",
+    "type": "list",
+    "source": "GroupChatList.swift",
+    "description": "Group list and selection. Group management remains command driven in the current app."
+  },
+  {
+    "id": "location-people",
+    "title": "Location-channel people",
+    "category": "People & identity",
+    "type": "list",
+    "source": "GeohashPeopleList.swift",
+    "description": "People in the selected geohash channel and recent private conversations."
+  },
+  {
+    "id": "fingerprint",
+    "title": "Peer fingerprint & alias",
+    "category": "People & identity",
+    "type": "form",
+    "source": "FingerprintView.swift",
+    "description": "Compare fingerprints, manage verification, and set a local alias."
+  },
+  {
+    "id": "my-qr",
+    "title": "My verification code",
+    "category": "People & identity",
+    "type": "form",
+    "source": "VerificationViews.swift / MyQRView",
+    "description": "Illustrative QR only; no real identity is encoded in this concept."
+  },
+  {
+    "id": "scan",
+    "title": "Scan or paste verification",
+    "category": "People & identity",
+    "type": "form",
+    "source": "VerificationViews.swift / QRScanView",
+    "description": "Camera scan and pasted-code fallback; distinct from manual fingerprint comparison."
+  },
+  {
+    "id": "channels",
+    "title": "Location channels",
+    "category": "Places & boards",
+    "type": "list",
+    "source": "LocationChannelsSheet.swift",
+    "description": "Mesh and geographic scopes, with exact geohash captions and approximate scope."
+  },
+  {
+    "id": "invite",
+    "title": "Share channel invitation",
+    "category": "Places & boards",
+    "type": "dialog",
+    "source": "ContentHeaderView.swift + LocationChannelsSheet.swift",
+    "description": "Fine-precision sharing confirmation and channel invitation payload."
+  },
+  {
+    "id": "mesh-board",
+    "title": "Mesh board",
+    "category": "Places & boards",
+    "type": "board",
+    "source": "NoticesView.swift / mesh tab",
+    "description": "Nearby board posts, expiry, urgent notices, and posting controls."
+  },
+  {
+    "id": "location-board",
+    "title": "Location notes",
+    "category": "Places & boards",
+    "type": "board",
+    "source": "NoticesView.swift / geo tab",
+    "description": "Location notes include scope, relay state, and permission/retry states."
+  },
+  {
+    "id": "picker",
+    "title": "Choose an image",
+    "category": "Media & tools",
+    "type": "media",
+    "source": "Image Viewers/MacImagePickerView.swift",
+    "description": "System file selection keeps this native and lightweight."
+  },
+  {
+    "id": "image",
+    "title": "Image preview & export",
+    "category": "Media & tools",
+    "type": "media",
+    "source": "Image Viewers/ImagePreviewView.swift",
+    "description": "Large image preview, export action, and received-media state."
+  },
+  {
+    "id": "commands",
+    "title": "Command suggestions",
+    "category": "Media & tools",
+    "type": "form",
+    "source": "Components/CommandSuggestionsView.swift",
+    "description": "Suggestions for the existing slash-command composer."
+  },
+  {
+    "id": "topology",
+    "title": "Mesh topology",
+    "category": "Media & tools",
+    "type": "form",
+    "source": "MeshTopologyView.swift",
+    "description": "Display observed links and routes; radio signal is not a distance measurement."
+  },
+  {
+    "id": "connectivity",
+    "title": "Connectivity & relays",
+    "category": "Settings & info",
+    "type": "form",
+    "source": "AppInfoView.swift / Settings",
+    "description": "Mesh bridge, Tor routing, and built-in/custom private-message relays."
+  },
+  {
+    "id": "privacy",
+    "title": "Notification privacy & reset",
+    "category": "Settings & info",
+    "type": "form",
+    "source": "AppInfoView.swift / Settings",
+    "description": "Hide previews by default and visually separate the panic wipe action."
+  },
+  {
+    "id": "appearance",
+    "title": "Appearance & language",
+    "category": "Settings & info",
+    "type": "form",
+    "source": "AppInfoView.swift / Settings",
+    "description": "Theme and language controls; restart notice after language selection."
+  },
+  {
+    "id": "about",
+    "title": "About & help",
+    "category": "Settings & info",
+    "type": "form",
+    "source": "AppInfoView.swift / Info",
+    "description": "Feature explanations, how to use the app, and independent upstream attribution."
+  },
+  {
+    "id": "empty",
+    "title": "No nearby peers",
+    "category": "States & dialogs",
+    "type": "empty",
+    "source": "Components/MeshEmptyStateView.swift + MeshRadarView.swift",
+    "description": "Discovery empty state within the mesh conversation."
+  },
+  {
+    "id": "bluetooth",
+    "title": "Bluetooth unavailable",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "ContentView.swift + Components/ConnectivityStatusBanner.swift",
+    "description": "Powered-off, denied, and unsupported states need different explanations and actions."
+  },
+  {
+    "id": "tor-blocked",
+    "title": "Tor connectivity blocked",
+    "category": "States & dialogs",
+    "type": "empty",
+    "source": "Components/ConnectivityStatusBanner.swift",
+    "description": "The Tor-blocked state keeps privacy implications visible."
+  },
+  {
+    "id": "panic",
+    "title": "Confirm panic wipe",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "AppInfoView.swift + ContentView.swift",
+    "description": "An explicit destructive confirmation for erasing local data and identity."
+  },
+  {
+    "id": "wipe-blocked",
+    "title": "Incomplete wipe",
+    "category": "States & dialogs",
+    "type": "empty",
+    "source": "Components/PanicWipeBlockedBanner.swift",
+    "description": "A failure state that outranks ordinary connectivity status."
+  },
+  {
+    "id": "clear",
+    "title": "Clear conversation",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "MessageListView.swift",
+    "description": "Confirm clearing the current local conversation."
+  },
+  {
+    "id": "actions",
+    "title": "Message & participant actions",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "MessageListView.swift",
+    "description": "Existing mention, private-message, favorite, block, and copy actions."
+  },
+  {
+    "id": "legacy",
+    "title": "Legacy media warning",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "ContentSheetViews.swift + Media/BlockRevealImageView.swift",
+    "description": "Explicit consent before legacy private media without end-to-end encryption."
+  },
+  {
+    "id": "screenshot",
+    "title": "Screenshot privacy notice",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "ContentHeaderView.swift",
+    "description": "Explain the existing screenshot privacy limitation."
+  },
+  {
+    "id": "recording-error",
+    "title": "Microphone / recording error",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "ContentView.swift + ContentSheetViews.swift",
+    "description": "Permission-denied action opens system microphone settings."
+  },
+  {
+    "id": "share-import",
+    "title": "Review shared content",
+    "category": "States & dialogs",
+    "type": "dialog",
+    "source": "ContentView.swift / sharedContentImportModel",
+    "description": "Inherited share-import review; the iOS share extension is outside desktop product scope."
+  }
+]
