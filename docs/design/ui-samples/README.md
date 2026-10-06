@@ -6,7 +6,7 @@ Three visual directions cover 37 existing screens, sheets, component states, and
 - **Native Light:** light surfaces, quiet emerald accents, and clear native control hierarchy.
 - **Graphite:** slate panels, silver text, and restrained cyan navigation accents.
 
-The gallery supports screen search, previous/next navigation, theme switching, sample message composition, and illustrative toggles. Destructive buttons only show a sample notification. Camera, microphone, radio, keys, files, and real messages are never accessed.
+The gallery supports screen search, previous/next navigation, theme switching, sample message composition, illustrative toggles, and a persistent Bubble / Terminal message layout choice under Appearance & language. This layout choice is independent of the visual direction. Destructive buttons only show a sample notification. Camera, microphone, radio, keys, files, and real messages are never accessed.
 
 ## Generated overview boards
 

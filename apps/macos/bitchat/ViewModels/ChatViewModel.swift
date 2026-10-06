@@ -1822,8 +1822,8 @@ final class ChatViewModel: ObservableObject, BitchatDelegate, SynchronousMessage
     // MARK: - Message Formatting
 
     @MainActor
-    func formatMessageAsText(_ message: BitchatMessage, colorScheme: ColorScheme, theme: AppTheme? = nil) -> AttributedString {
-        messageFormatter.formatMessageAsText(message, colorScheme: colorScheme, theme: theme ?? currentTheme)
+    func formatMessageAsText(_ message: BitchatMessage, colorScheme: ColorScheme, theme: AppTheme? = nil, includesMetadata: Bool = true) -> AttributedString {
+        messageFormatter.formatMessageAsText(message, colorScheme: colorScheme, theme: theme ?? currentTheme, includesMetadata: includesMetadata)
     }
 
     @MainActor

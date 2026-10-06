@@ -8,6 +8,7 @@ struct AppInfoView: View {
     @Environment(\.dismiss) var dismiss
     @ThemedPalette private var palette
     @AppStorage(AppTheme.storageKey) private var appThemeRawValue = AppTheme.matrix.rawValue
+    @AppStorage(ChatMessageStyle.storageKey) private var chatMessageStyleRawValue = ChatMessageStyle.terminal.rawValue
     @EnvironmentObject private var locationChannelsModel: LocationChannelsModel
     @ObservedObject private var bridgeService = BridgeService.shared
 
@@ -354,6 +355,24 @@ struct AppInfoView: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(selectedTheme == theme ? .isSelected : [])
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 12) {
+                SectionHeader(verbatim: String(localized: "app_info.chat_style.title", defaultValue: "CHAT STYLE", comment: "Section heading for the chat message layout setting"))
+
+                settingsCard {
+                    Picker(String(localized: "app_info.chat_style.picker", defaultValue: "Message layout", comment: "Accessibility label for the chat style picker"), selection: $chatMessageStyleRawValue) {
+                        ForEach(ChatMessageStyle.allCases) { style in
+                            Text(verbatim: style.displayName).tag(style.rawValue)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+
+                    Text(String(localized: "app_info.chat_style.description", defaultValue: "Bubble separates incoming and outgoing messages. Terminal keeps a compact log. Applies to all conversations.", comment: "Explanation of the two chat layout options"))
+                        .bitchatFont(size: 11)
+                        .foregroundColor(secondaryTextColor)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
 

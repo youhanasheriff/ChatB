@@ -33,3 +33,11 @@ The local Apple Silicon Release build now succeeds with Xcode 27.0 after the com
 The repeat build command passed, the app was ad-hoc signed, `codesign --verify --deep --strict` passed, and Launch Services opened the app with its process running. The local signature retains the sandbox and device/network entitlements and omits the provisioned App Group entitlement. This is a local testing build, not a distribution signature. Bluetooth exchanges, the full application test suite, and long-running behavior remain unverified.
 
 Measured on 2026-10-06: the arm64 Release app bundle contains **22,439,296 bytes (22.4 MB / 21.4 MiB)** of logical file data, including its **19,267,648-byte** executable. This excludes build caches, debug symbols outside the bundle, and filesystem allocation overhead; it is not a compressed-download or universal-build measurement.
+
+## Chat message layout preference
+
+Settings now includes a persistent **Bubble / Terminal** chat-style picker, independent of the appearance theme. Terminal remains the default. Bubble separates incoming and outgoing rows, including media, while preserving rich message links, verification/delivery indicators, and archived-history dimming. System messages retain their log presentation. The local UI gallery includes the same setting under Appearance & language.
+
+The arm64 local Release build passed. All **5 ChatViewModelFormattingTests** passed in a Debug Xcode test run with `ENABLE_TESTABILITY=YES`, including two new regressions covering Unicode/link preservation, cache separation across layout changes, and content that resembles sender/timestamp metadata. Gallery switching, persistence across reloads, and all 111 screen/theme combinations with Bubble selected passed browser checks. This scoped test run does not qualify the entire application suite or hardware interoperability.
+
+The local build script now removes injected `.xctest` bundles from its generated app before standalone signing; Xcode test actions can otherwise leave a partial test plug-in that prevents signature verification. No tracked sources or distributed application extensions are removed.

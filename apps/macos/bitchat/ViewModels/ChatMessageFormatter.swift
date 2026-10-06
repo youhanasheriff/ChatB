@@ -14,7 +14,7 @@ final class ChatMessageFormatter {
         self.viewModel = viewModel
     }
 
-    func formatMessageAsText(_ message: BitchatMessage, colorScheme: ColorScheme, theme: AppTheme = .matrix) -> AttributedString {
+    func formatMessageAsText(_ message: BitchatMessage, colorScheme: ColorScheme, theme: AppTheme = .matrix, includesMetadata: Bool = true) -> AttributedString {
         let design = theme.bodyFontDesign
         let isSelf: Bool = {
             if let spid = message.senderPeerID {
@@ -42,7 +42,7 @@ final class ChatMessageFormatter {
 
         let isDark = colorScheme == .dark
         let isVerifiedSender = !isSelf && isVerifiedSender(of: message)
-        let cacheVariant = theme.formatCacheVariant + (isVerifiedSender ? "-vf" : "")
+        let cacheVariant = theme.formatCacheVariant + (isVerifiedSender ? "-vf" : "") + (includesMetadata ? "" : "-body")
         if let cachedText = message.getCachedFormattedText(isDark: isDark, isSelf: isSelf, variant: cacheVariant) {
             return cachedText
         }
@@ -51,30 +51,32 @@ final class ChatMessageFormatter {
         let baseColor: Color = isSelf ? .orange : peerColor(for: message, isDark: isDark)
 
         if message.sender != "system" {
-            let (baseName, suffix) = message.sender.splitSuffix()
-            var senderStyle = AttributeContainer()
-            senderStyle.foregroundColor = baseColor
-            let fontWeight: Font.Weight = isSelf ? .bold : .medium
-            senderStyle.font = .bitchatSystem(size: 14, weight: fontWeight, design: design)
-            if let spid = message.senderPeerID,
-               let url = URL(string: "bitchat://user/\(spid.toPercentEncoded())") {
-                senderStyle.link = url
-            }
+            if includesMetadata {
+                let (baseName, suffix) = message.sender.splitSuffix()
+                var senderStyle = AttributeContainer()
+                senderStyle.foregroundColor = baseColor
+                let fontWeight: Font.Weight = isSelf ? .bold : .medium
+                senderStyle.font = .bitchatSystem(size: 14, weight: fontWeight, design: design)
+                if let spid = message.senderPeerID,
+                   let url = URL(string: "bitchat://user/\(spid.toPercentEncoded())") {
+                    senderStyle.link = url
+                }
 
-            result.append(AttributedString("<@").mergingAttributes(senderStyle))
-            result.append(AttributedString(baseName).mergingAttributes(senderStyle))
-            if !suffix.isEmpty {
-                var suffixStyle = senderStyle
-                suffixStyle.foregroundColor = baseColor.opacity(0.6)
-                result.append(AttributedString(suffix).mergingAttributes(suffixStyle))
+                result.append(AttributedString("<@").mergingAttributes(senderStyle))
+                result.append(AttributedString(baseName).mergingAttributes(senderStyle))
+                if !suffix.isEmpty {
+                    var suffixStyle = senderStyle
+                    suffixStyle.foregroundColor = baseColor.opacity(0.6)
+                    result.append(AttributedString(suffix).mergingAttributes(suffixStyle))
+                }
+                // Private rows render a filled SF Symbol seal beside the lock
+                // (TextMessageView / MediaMessageView); skip the in-string ✓ there
+                // so verified DMs don't show two markers.
+                if isVerifiedSender, !message.isPrivate {
+                    appendVerifiedSeal(to: &result, baseColor: baseColor, design: design)
+                }
+                result.append(AttributedString("> ").mergingAttributes(senderStyle))
             }
-            // Private rows render a filled SF Symbol seal beside the lock
-            // (TextMessageView / MediaMessageView); skip the in-string ✓ there
-            // so verified DMs don't show two markers.
-            if isVerifiedSender, !message.isPrivate {
-                appendVerifiedSeal(to: &result, baseColor: baseColor, design: design)
-            }
-            result.append(AttributedString("> ").mergingAttributes(senderStyle))
 
             let content = message.content
             let nsContent = content as NSString
@@ -325,11 +327,13 @@ final class ChatMessageFormatter {
                 }
             }
 
-            let timestamp = AttributedString(" [\(message.formattedTimestamp)]")
-            var timestampStyle = AttributeContainer()
-            timestampStyle.foregroundColor = Color.gray.opacity(0.7)
-            timestampStyle.font = .bitchatSystem(size: 10, design: design)
-            result.append(timestamp.mergingAttributes(timestampStyle))
+            if includesMetadata {
+                let timestamp = AttributedString(" [\(message.formattedTimestamp)]")
+                var timestampStyle = AttributeContainer()
+                timestampStyle.foregroundColor = Color.gray.opacity(0.7)
+                timestampStyle.font = .bitchatSystem(size: 10, design: design)
+                result.append(timestamp.mergingAttributes(timestampStyle))
+            }
         } else {
             var contentStyle = AttributeContainer()
             contentStyle.foregroundColor = Color.gray

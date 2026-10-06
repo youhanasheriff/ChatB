@@ -640,6 +640,43 @@ struct ChatViewModelNoisePayloadTests {
 struct ChatViewModelFormattingTests {
 
     @Test @MainActor
+    func bubbleBody_preservesUnicodeAndLinksWhenSwitchingLayouts() async {
+        let (viewModel, _) = makeTestableViewModel()
+        let message = BitchatMessage(
+            id: "fmt-bubble",
+            sender: "Maya#a1b2",
+            content: "Hello 👋 தமிழ் https://example.com #mesh",
+            timestamp: Date(timeIntervalSince1970: 1_700_010_000),
+            isRelay: false,
+            senderPeerID: PeerID(str: "00000000000000b1")
+        )
+
+        let terminal = viewModel.formatMessageAsText(message, colorScheme: .light)
+        let body = viewModel.formatMessageAsText(message, colorScheme: .light, includesMetadata: false)
+        let terminalAgain = viewModel.formatMessageAsText(message, colorScheme: .light)
+
+        #expect(String(body.characters) == message.content)
+        #expect(body.runs.contains { $0.link == URL(string: "https://example.com") })
+        #expect(terminalAgain == terminal)
+        #expect(String(terminalAgain.characters) == "<@Maya#a1b2> \(message.content) [\(message.formattedTimestamp)]")
+    }
+
+    @Test @MainActor
+    func bubbleBody_keepsContentThatLooksLikeMetadata() async {
+        let (viewModel, _) = makeTestableViewModel()
+        let message = BitchatMessage(
+            id: "fmt-bubble-metadata",
+            sender: "Maya",
+            content: "<@Maya> quoted text [12:34]",
+            timestamp: Date(timeIntervalSince1970: 1_700_010_000),
+            isRelay: false
+        )
+
+        let body = viewModel.formatMessageAsText(message, colorScheme: .dark, includesMetadata: false)
+        #expect(String(body.characters) == message.content)
+    }
+
+    @Test @MainActor
     func formatMessageAsText_formatsSenderContentAndTimestamp() async {
         let (viewModel, _) = makeTestableViewModel()
         let message = BitchatMessage(

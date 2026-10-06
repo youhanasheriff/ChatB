@@ -46,6 +46,11 @@ xcodebuild -project "$project" -scheme "$scheme" -configuration "$configuration"
   ARCHS="$architecture" ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO build
 
 app="$derived_data/Build/Products/$configuration/BitChat Desktop.app"
+# Xcode test actions can leave an injected (or partially built) test bundle
+# in the app. It is a build artifact, not part of the standalone local app.
+if [[ -d "$app/Contents/PlugIns" ]]; then
+  find "$app/Contents/PlugIns" -maxdepth 1 -name '*.xctest' -exec rm -rf -- {} +
+fi
 # Ad-hoc local testing cannot provision an Apple App Group. Retain the
 # sandbox and device/network permissions, omitting only that entitlement.
 entitlements="$(mktemp -t bitchat-desktop-entitlements)"

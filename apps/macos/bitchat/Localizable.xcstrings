@@ -1,6 +1,66 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "app_info.chat_style.bubble" : {
+      "comment": "Chat message layout preference, independent of appearance theme.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bubble"
+          }
+        }
+      }
+    },
+    "app_info.chat_style.terminal" : {
+      "comment": "Chat message layout preference, independent of appearance theme.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminal"
+          }
+        }
+      }
+    },
+    "app_info.chat_style.title" : {
+      "comment": "Chat message layout preference, independent of appearance theme.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CHAT STYLE"
+          }
+        }
+      }
+    },
+    "app_info.chat_style.picker" : {
+      "comment": "Chat message layout preference, independent of appearance theme.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Message layout"
+          }
+        }
+      }
+    },
+    "app_info.chat_style.description" : {
+      "comment": "Chat message layout preference, independent of appearance theme.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bubble separates incoming and outgoing messages. Terminal keeps a compact log. Applies to all conversations."
+          }
+        }
+      }
+    },
     "board.accessibility.post" : {
       "comment" : "Accessibility label for the board post button",
       "extractionState" : "manual",

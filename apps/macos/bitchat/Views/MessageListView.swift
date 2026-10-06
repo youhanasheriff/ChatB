@@ -25,6 +25,11 @@ struct MessageListView: View {
 
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.appTheme) private var theme
+    @AppStorage(ChatMessageStyle.storageKey) private var chatMessageStyleRawValue = ChatMessageStyle.terminal.rawValue
+
+    private var chatMessageStyle: ChatMessageStyle {
+        ChatMessageStyle(rawValue: chatMessageStyleRawValue) ?? .terminal
+    }
 
     let privatePeer: PeerID?
     @Binding var isAtBottom: Bool
@@ -511,15 +516,43 @@ private extension MessageListView {
         Group {
             if message.sender == "system" {
                 systemMessageRow(message)
-            } else if let media = conversationUIModel.mediaAttachment(for: message) {
-                MediaMessageView(message: message, media: media, imagePreviewURL: $imagePreviewURL)
+            } else if chatMessageStyle == .bubble {
+                let isFromMe = message.senderPeerID.map {
+                    conversationUIModel.isSelfSender(peerID: $0, displayName: message.sender)
+                } ?? conversationUIModel.isSentByCurrentUser(message)
+                HStack(alignment: .top, spacing: 0) {
+                    if isFromMe { Spacer(minLength: 36) }
+                    messageContent(for: message)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .frame(maxWidth: 520, alignment: .leading)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .fill(isFromMe ? palette.accent.opacity(0.14) : palette.secondary.opacity(0.10))
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(palette.divider.opacity(0.5), lineWidth: 0.5)
+                        )
+                    if !isFromMe { Spacer(minLength: 36) }
+                }
+                .padding(.vertical, 5)
             } else {
-                TextMessageView(message: message)
+                messageContent(for: message)
             }
         }
         // Archived echoes ("heard here earlier") render dimmed: real history,
         // visually distinct from the live conversation.
         .opacity(message.isArchivedEcho ? 0.55 : 1)
+    }
+
+    @ViewBuilder
+    private func messageContent(for message: BitchatMessage) -> some View {
+        if let media = conversationUIModel.mediaAttachment(for: message) {
+            MediaMessageView(message: message, media: media, imagePreviewURL: $imagePreviewURL)
+        } else {
+            TextMessageView(message: message, style: chatMessageStyle)
+        }
     }
 
     @ViewBuilder

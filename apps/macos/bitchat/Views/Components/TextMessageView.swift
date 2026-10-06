@@ -16,6 +16,7 @@ struct TextMessageView: View {
     @EnvironmentObject private var conversationUIModel: ConversationUIModel
 
     let message: BitchatMessage
+    let style: ChatMessageStyle
     /// Value snapshot of the message's mutable delivery status, captured at
     /// construction. `BitchatMessage` is a reference type mutated in place by
     /// `ConversationStore`, and SwiftUI compares reference-typed view fields
@@ -27,8 +28,9 @@ struct TextMessageView: View {
     @State private var expandedMessageIDs: Set<String> = []
     @State private var showDeliveryDetail = false
 
-    init(message: BitchatMessage) {
+    init(message: BitchatMessage, style: ChatMessageStyle = .terminal) {
         self.message = message
+        self.style = style
         self.deliveryStatus = message.deliveryStatus
     }
 
@@ -37,6 +39,17 @@ struct TextMessageView: View {
             // Precompute heavy token scans once per row
             let cashuLinks = message.content.extractCashuLinks()
             let lightningLinks = message.content.extractLightningLinks()
+            if style == .bubble {
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    Text(conversationUIModel.formatMessageHeader(message, colorScheme: colorScheme, theme: theme))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                    Text(verbatim: message.formattedTimestamp)
+                        .bitchatFont(size: 10)
+                        .foregroundColor(palette.secondary)
+                }
+                .padding(.bottom, 6)
+            }
             // Baseline alignment keeps the lock and delivery glyphs on the
             // first text line; a fixed top padding left the lock's solid body
             // hanging below the line's visual center.
@@ -68,7 +81,7 @@ struct TextMessageView: View {
                             String(localized: "content.accessibility.bridged_message", defaultValue: "Arrived across a mesh bridge", comment: "Accessibility label for the glyph marking a message that arrived across a mesh bridge")
                         )
                 }
-                Text(conversationUIModel.formatMessage(message, colorScheme: colorScheme, theme: theme))
+                Text(conversationUIModel.formatMessage(message, colorScheme: colorScheme, theme: theme, includesMetadata: style == .terminal))
                     .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(isLong && !isExpanded ? TransportConfig.uiLongMessageLineLimit : nil)
                     .frame(maxWidth: .infinity, alignment: .leading)
