@@ -6,15 +6,15 @@ Installable **Debian/Ubuntu packages** for Intel/AMD 64-bit and ARM64, with an a
 
 Use Debian 12 or Ubuntu 24.04. Choose the package matching `dpkg --print-architecture`:
 
-- `bitchat-desktop_0.1.0~preview.2-1_amd64.deb` — Intel/AMD 64-bit.
-- `bitchat-desktop_0.1.0~preview.2-1_arm64.deb` — ARM64.
+- `bitchat-desktop_0.1.0-preview.2-1_amd64.deb` — Intel/AMD 64-bit.
+- `bitchat-desktop_0.1.0-preview.2-1_arm64.deb` — ARM64.
 
 Download the `.deb` and its `.sha256` sidecar from this release. Verify and install (replace `amd64` with `arm64` when needed):
 
 ```sh
-sha256sum -c 'bitchat-desktop_0.1.0~preview.2-1_amd64.deb.sha256'
+sha256sum -c 'bitchat-desktop_0.1.0-preview.2-1_amd64.deb.sha256'
 sudo apt update
-sudo apt install './bitchat-desktop_0.1.0~preview.2-1_amd64.deb'
+sudo apt install './bitchat-desktop_0.1.0-preview.2-1_amd64.deb'
 ```
 
 APT installs the required GTK, D-Bus, and BlueZ libraries. Internet access is needed when those dependencies are missing. A graphical package installer that supports local `.deb` files can also open the package; the APT command works across both target distributions.

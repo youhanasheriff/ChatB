@@ -20,7 +20,9 @@ architecture = {'x86_64': 'amd64', 'aarch64': 'arm64'}[metadata['architecture']]
 if subprocess.check_output(['dpkg', '--print-architecture'], text=True).strip() != architecture:
     raise SystemExit('Build the Debian package on its native architecture')
 version = metadata['version'].replace('-preview.', '~preview.') + '-1'
-output = archive.parent / f'bitchat-desktop_{version}_{architecture}.deb'
+# GitHub release assets normalize '~'; keep it only in Debian's version field.
+filename_version = metadata['version'] + '-1'
+output = archive.parent / f'bitchat-desktop_{filename_version}_{architecture}.deb'
 if output.exists(): raise SystemExit('Refusing to overwrite a package')
 with tempfile.TemporaryDirectory() as temporary:
     temp = Path(temporary)
