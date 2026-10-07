@@ -42,3 +42,13 @@ Measure download bytes, installed files, missing runtime prerequisites, and work
 Developer ID signing, notarization, update delivery, and automated release
 qualification remain future work. The preview uses only ad-hoc signing and
 explicitly documents its installation and compatibility limitations.
+
+## Linux discovery preview
+
+The `Build Linux preview archives` workflow builds and tests native x86_64 and ARM64 binaries in Debian 12 containers, then uploads archives for review. It does not automatically publish a release. To package an already built Linux Release binary locally:
+
+```sh
+bash packaging/linux/package-preview.sh target/release/bitchat-desktop dist "$(git rev-parse HEAD)"
+```
+
+The output includes a `.tar.gz`, SHA-256 sidecar, and JSON size/source manifest for each architecture. The archive carries the project license, locked Rust dependency notices, `Cargo.lock`, installation notes, and a record of linked system libraries. Packaging checks the ELF architecture and dependency resolution, then extracts and smoke-tests the packaged executable. GTK/GLib/libdbus and other system runtimes are dynamically linked and not bundled. See [Linux release notes](../docs/releases/linux-v0.1.0-preview.1.md).

@@ -4,6 +4,10 @@ The first Linux implementation is a **native GTK4 discovery preview**, written i
 
 This is not yet a messenger: advertising, GATT connections, packet codecs, Noise authentication, shared-core integration, secure storage, Nostr, notifications, and packaging remain to be implemented. A discovered device is not a verified Bitchat identity. Bluetooth hardware interoperability has not been qualified.
 
+## Download the discovery preview
+
+Download the [Linux preview archives](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/linux-v0.1.0-preview.1) for x86_64 or ARM64. Read the [installation notes](../../docs/releases/linux-v0.1.0-preview.1.md) for runtime dependencies, checksum verification, and the discovery-only scope. These are unsigned archives, not self-contained bundles or distro packages.
+
 ## Build and run
 
 The development baseline is **Debian 12 / GTK 4.8 / BlueZ 5.66**, with Rust **1.85 or newer**. Ubuntu 24.04 is also a development target. The locked dependency graph is checked with Rust 1.85 in CI; this does not establish a supported distro/hardware matrix. Use the native architecture's toolchain (x86_64 or aarch64).

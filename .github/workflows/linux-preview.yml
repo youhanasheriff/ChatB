@@ -1,0 +1,42 @@
+name: Build Linux preview archives
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Linux preview (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: x86_64
+          - runner: ubuntu-24.04-arm
+            arch: aarch64
+    runs-on: ${{ matrix.runner }}
+    container:
+      image: rust:1.85-bookworm
+      options: --init
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install build and validation dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends libgtk-4-dev libdbus-1-dev pkg-config xvfb xauth dbus-x11 python3-dbusmock
+      - name: Run state, UI, and simulated Bluetooth checks
+        run: bash apps/linux/scripts/check.sh
+      - name: Build and package the native Release binary
+        run: |
+          bash apps/linux/scripts/build-local.sh
+          bash packaging/linux/package-preview.sh target/release/bitchat-desktop dist "$GITHUB_SHA"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-preview-${{ matrix.arch }}
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
