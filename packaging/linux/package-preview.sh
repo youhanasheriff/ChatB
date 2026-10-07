@@ -13,8 +13,10 @@ case "$(uname -m)" in
   *) echo 'Unsupported Linux architecture.' >&2; exit 1 ;;
 esac
 [[ "$source_commit" =~ ^[0-9a-f]{40}$ ]] || { echo 'Provide a full source commit hash.' >&2; exit 1; }
-git -C "$repo" cat-file -e "$source_commit^{commit}"
-git -C "$repo" show "$source_commit:Cargo.lock" | cmp - "$repo/Cargo.lock"
+# Actions checks out as the runner user but executes this step as container
+# root. Trust only this explicitly selected checkout for these read-only calls.
+git -c safe.directory="$repo" -C "$repo" cat-file -e "$source_commit^{commit}"
+git -c safe.directory="$repo" -C "$repo" show "$source_commit:Cargo.lock" | cmp - "$repo/Cargo.lock"
 mkdir -p "$output"
 output="$(cd "$output" && pwd)"
 name="BitChat-Desktop-$version-linux-$architecture"
