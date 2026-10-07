@@ -97,6 +97,6 @@ Numeric footprint, latency, reliability, and resource budgets will be set from f
 
 ## Current position
 
-The public monorepo and native architecture are established. The Apple implementation is inherited and partially rebranded. Windows/Linux clients and the Rust protocol/core/FFI crates are scaffolds. The shared core is not yet connected to the macOS application.
+The public monorepo and native architecture are established. The Apple implementation is inherited and partially rebranded. Windows and the Rust protocol/core/FFI crates remain scaffolds. Linux has a GTK4/BlueZ discovery preview, with messaging and hardware interoperability still pending. The shared core is not yet connected to the macOS application.
 
 The [roadmap](ROADMAP.md) is the implementation checklist. [Architecture](ARCHITECTURE.md), [upstream provenance](UPSTREAM.md), and [research](DESKTOP-RESEARCH.md) provide supporting detail.

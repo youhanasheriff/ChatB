@@ -78,3 +78,21 @@ All **73 tests across five scoped suites** passed: `DesktopDebugCaptureTests`, `
 The arm64 Release build, local ad-hoc signing and strict signature verification passed. Native UI checks confirmed the screen's Release/main-mesh label, powered-on central/peripheral managers, active scanning/advertising, live link counts, a connected peer with an established Noise session and signature-verified announce, discovery refresh, continuous-scan override, typed console events and Copy report's Copied state. Turning Debug mode off visibly disabled the actions, cleared the console and reset continuous scanning. A ping was started; its phone response was not qualified. No additional message round trip or destructive panic wipe was performed for this screen's UI verification.
 
 This desktop implementation does not expose Android Wi-Fi Aware controls, custom GATT role/connection limits, packet-rate graphs or sync/Bloom tuning. Full translation coverage and the full application test suite remain pending.
+
+## Linux discovery preview — October 7, 2026
+
+The first Linux target now builds as a native Rust/GTK4 application with a BlueZ discovery backend and a headless `--scan` command. Validation ran on **Linux aarch64 in a Debian 12 Docker container**, hosted by the Apple Silicon Mac, with **Rust 1.85.1, GTK 4.8.3, and libdbus 1.14.10**.
+
+Passed checks:
+
+- Locked Debug and optimized Release builds of `bitchat-desktop-linux`.
+- Six Rust tests covering CLI validation, default/isolated network selection, service filtering, bounded device state, failure cleanup, and remote-name sanitization.
+- Six integration tests using an isolated mocked BlueZ system bus: missing adapter, disabled radio, mainnet/testnet filtering despite merged scan results, permission denial, cancellation with discovery release, and radio power loss.
+- GTK launch/close under Xvfb without Bluetooth hardware, including an assertion that the empty-list placeholder is visible; an explicit missing-system-bus scan returns an actionable failure.
+- Linux workspace Clippy with warnings denied; macOS workspace formatting, Clippy and tests; Git whitespace and shell syntax checks.
+- Visual inspection of the actual GTK ready and unavailable-BlueZ states, plus scan-button interaction and Ctrl+Q shutdown. The visual check caught and fixed removal of the list's empty-state widget during refresh.
+- The existing 20 Python tests and verification of six imported interoperability fixture hashes.
+
+The Linux CI additions run the native workspace checks and a dedicated Rust 1.85 / Debian 12 build and simulated-BlueZ harness. These jobs have been added locally; a remote CI run has not been claimed. Windows/macOS compile only the portable Linux state/argument modules and an unsupported-platform entry point; they do not validate GTK or BlueZ.
+
+The container does not expose a physical Bluetooth controller. **Real discovery, peripheral advertising, GATT exchange, Noise authentication, messaging, secure storage, Wayland behavior, and distribution packaging remain unverified or unimplemented.** The shared Rust protocol/core/FFI crates remain scaffolds. The scanner does not join or advertise on the mesh. See [Linux development instructions](../apps/linux/README.md) for the exact build/check commands and hardware acceptance requirements.

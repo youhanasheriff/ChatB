@@ -46,7 +46,7 @@ The desktop shell adds a persistent, collapsible sidebar, inline direct/group co
 
 ## Limits and remaining work
 
-- Windows and Linux interfaces remain scaffolds. This implementation is the macOS client; cross-platform UI parity is still pending.
+- Windows remains a scaffold. Linux has a separate GTK4 discovery window; conversations and cross-platform UI parity are still pending. This checklist describes the macOS client.
 - Native file, save, share, context-menu and confirmation dialogs use macOS controls. Their layout follows the operating system rather than duplicating the gallery’s illustrative cards.
 - There is no macOS Share extension. Review clipboard supplies the desktop shared-content review workflow, with bounded text, an explicit destination, and confirmation before replacing a draft.
 - macOS does not provide the inherited iOS screenshot notification. The privacy notice is available in Settings; automatic screenshot detection is not implemented.

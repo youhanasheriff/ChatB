@@ -10,7 +10,7 @@ Read the [vision and mission](docs/VISION-AND-MISSION.md) and the [implementatio
 
 - **macOS:** the upstream SwiftUI/CoreBluetooth implementation is retained in `apps/macos`, with a BitChat Desktop application product and separate bundle identity. The native macOS app builds and launches locally with the desktop UI, three study palettes, and Bubble / Terminal chats. See the [UI checklist](docs/UI-IMPLEMENTATION.md) and [validation notes](docs/SETUP-VALIDATION.md). Hardware interoperability remains to be verified.
 - **Windows:** native Win32 client planned; directory scaffold only.
-- **Linux:** native GTK4 client planned; directory scaffold only.
+- **Linux:** native GTK4 discovery preview with BlueZ scanning and a headless `--scan` command. See the [Linux README](apps/linux/README.md) for builds and checks. Messaging and physical Bluetooth interoperability remain pending.
 - **Shared Rust core:** workspace scaffolding only. Packet codecs, cryptography, routing, and Nostr implementation have not yet been ported or connected to the macOS app.
 
 No Windows/Linux release or complete cross-platform compatibility is claimed yet.
@@ -42,7 +42,7 @@ docs/             Architecture, research, upstream provenance
 
 ## Develop
 
-Check the Rust workspace scaffolding:
+Check the Rust workspace (on Linux, install the native dependencies listed in the [Linux README](apps/linux/README.md) first):
 
 ```sh
 cargo check --workspace --locked

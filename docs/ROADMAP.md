@@ -2,7 +2,7 @@
 
 A living implementation checklist for the [vision and mission](VISION-AND-MISSION.md). It covers the known work from the current scaffold to a supported native desktop release and ongoing upstream maintenance. Newly discovered requirements must be added explicitly; this is not a claim that future upstream changes can be predicted.
 
-Last reviewed: **October 6, 2026**. Stable-release work is in sections 0–26; section 27 records separate future decisions.
+Last reviewed: **October 7, 2026**. Stable-release work is in sections 0–26; section 27 records separate future decisions.
 
 ## Navigation
 
@@ -34,7 +34,7 @@ Baseline: BitChat Desktop setup commit `1bb00da`, following Bitchat `5e9287fae1e
 |---|---|---|
 | macOS | Inherited SwiftUI/CoreBluetooth code, BitChat Desktop product identity, passing package tests and complete Release build | Launch, application tests, and physical interoperability still need qualification |
 | Windows | Directory scaffold; Rust workspace compiles in Windows CI | No native Windows client or Bluetooth implementation |
-| Linux | Directory scaffold; Rust workspace compiles in Linux CI | No native Linux client or Bluetooth implementation |
+| Linux | GTK4 discovery preview and BlueZ scanner; headless scan command and Linux validation harness | Physical Bluetooth qualification, GATT transport, shared protocol, and messaging remain |
 | Shared Rust | Three compiling workspace crates | Protocol, core, and FFI behavior are not implemented |
 | Fixtures | Six copied upstream fixtures and seven Arti artifact hashes verified | Rust conformance runner and broader independent vectors remain |
 | Size | Small macOS UI probes in the research report | No finished BitChat Desktop installation size measured |
@@ -112,7 +112,7 @@ A feature is done when its required implementation, positive/negative checks, up
 **Milestone:** M2. **Exit condition:** Each proposed platform can perform the required radio roles on documented physical hardware.
 
 - [ ] **RAD-01** Create a small Windows transport proof that scans for the pinned Bitchat service.
-- [ ] **RAD-02** Create a small Linux transport proof that scans for the same service.
+- [ ] **RAD-02** Create a small Linux transport proof that scans for the same service. Scanner implemented in `apps/linux`; physical-device evidence remains required.
 - [ ] **RAD-03** Prove peripheral advertising and GATT-server operation on Windows hardware.
 - [ ] **RAD-04** Prove peripheral advertising and GATT-server operation on Linux hardware.
 - [ ] **RAD-05** Prove simultaneous scanning, advertising, central links, and peripheral links where full participation requires them.
@@ -325,8 +325,8 @@ A feature is done when its required implementation, positive/negative checks, up
 
 **Milestone:** M4 / M6. **Exit condition:** The Linux app works in the supported distro/desktop combinations with explicit dependencies and permissions.
 
-- [ ] **LIN-01** Create the actual GTK4 application target and repeatable Linux build.
-- [ ] **LIN-02** Define GTK main-loop integration and shared-core task/callback ownership.
+- [x] **LIN-01** Create the actual GTK4 application target and repeatable Linux build. Discovery preview: `apps/linux`, with a Rust 1.85 / Debian 12 validation container and CI job.
+- [ ] **LIN-02** Define GTK main-loop integration and shared-core task/callback ownership. GTK/Tokio discovery ownership is implemented; the shared core is not connected.
 - [ ] **LIN-03** Build the conversation list, message view, composer, peer list, and settings interface.
 - [ ] **LIN-04** Integrate the shared core, Linux Bluetooth adapter, and secure storage.
 - [ ] **LIN-05** Define GTK, Bluetooth service, libc, and other minimum dependency versions.
