@@ -78,8 +78,8 @@ unsafe extern "system" fn window_proc(hwnd: HWND, msg: u32, wp: WPARAM, lp: LPAR
         }
         WM_CTLCOLORSTATIC => {
             let dc = HDC(wp.0 as *mut _);
-            SetBkColor(dc, GetSysColor(COLOR_WINDOW));
-            SetTextColor(dc, GetSysColor(COLOR_WINDOWTEXT));
+            SetBkColor(dc, COLORREF(GetSysColor(COLOR_WINDOW)));
+            SetTextColor(dc, COLORREF(GetSysColor(COLOR_WINDOWTEXT)));
             LRESULT(GetSysColorBrush(COLOR_WINDOW).0 as isize)
         }
         WM_DESTROY => {
