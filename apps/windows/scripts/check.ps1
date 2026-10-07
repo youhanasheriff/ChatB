@@ -80,3 +80,6 @@ try {
  if ($app.ExitCode -ne 0) { throw 'Window teardown failed' }
 } finally { if (-not $app.HasExited) { $app.Kill() } }
 Write-Host 'Windows launch, controls, radio outcome, retry, resize and teardown checks passed.'
+
+# The invalid-argument check intentionally returned 1; do not leak it to CI.
+$global:LASTEXITCODE = 0

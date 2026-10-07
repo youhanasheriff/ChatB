@@ -16,13 +16,13 @@ use windows::{
     },
 };
 
-pub struct Apartment;
+pub struct Apartment(std::marker::PhantomData<std::rc::Rc<()>>);
 impl Apartment {
     pub fn new() -> Result<Self> {
         unsafe {
             RoInitialize(RO_INIT_MULTITHREADED)?;
         }
-        Ok(Self)
+        Ok(Self(std::marker::PhantomData))
     }
 }
 impl Drop for Apartment {
@@ -76,6 +76,12 @@ unsafe extern "system" fn window_proc(hwnd: HWND, msg: u32, wp: WPARAM, lp: LPAR
             };
             LRESULT(0)
         }
+        WM_CTLCOLORSTATIC => {
+            let dc = HDC(wp.0 as *mut _);
+            SetBkColor(dc, GetSysColor(COLOR_WINDOW));
+            SetTextColor(dc, GetSysColor(COLOR_WINDOWTEXT));
+            LRESULT(GetSysColorBrush(COLOR_WINDOW).0 as isize)
+        }
         WM_DESTROY => {
             PostQuitMessage(0);
             LRESULT(0)
@@ -93,6 +99,7 @@ struct Controls {
     list: HWND,
     footer: HWND,
     font: HFONT,
+    title_font: HFONT,
 }
 impl Controls {
     unsafe fn new(hwnd: HWND, testnet: bool) -> Result<Self> {
@@ -159,6 +166,7 @@ impl Controls {
             list,
             footer,
             font: HFONT::default(),
+            title_font: HFONT::default(),
         })
     }
     unsafe fn layout(&mut self, hwnd: HWND) -> Result<()> {
@@ -169,12 +177,29 @@ impl Controls {
         let width = rect.right * 96 / dpi;
         let height = rect.bottom * 96 / dpi;
         let old = self.font;
+        let old_title = self.title_font;
         self.font = CreateFontW(
             -scale(16),
             0,
             0,
             0,
             FW_NORMAL.0 as i32,
+            0,
+            0,
+            0,
+            DEFAULT_CHARSET,
+            OUT_DEFAULT_PRECIS,
+            CLIP_DEFAULT_PRECIS,
+            CLEARTYPE_QUALITY,
+            DEFAULT_PITCH.0 as u32,
+            w!("Segoe UI"),
+        );
+        self.title_font = CreateFontW(
+            -scale(26),
+            0,
+            0,
+            0,
+            FW_SEMIBOLD.0 as i32,
             0,
             0,
             0,
@@ -196,6 +221,15 @@ impl Controls {
         ] {
             MoveWindow(control, scale(x), scale(y), scale(w), scale(h), true)?;
             send_message(control, WM_SETFONT, WPARAM(self.font.0 as usize), LPARAM(1));
+        }
+        send_message(
+            self.title,
+            WM_SETFONT,
+            WPARAM(self.title_font.0 as usize),
+            LPARAM(1),
+        );
+        if !old_title.is_invalid() {
+            let _ = DeleteObject(old_title.into());
         }
         if !old.is_invalid() {
             let _ = DeleteObject(old.into());
@@ -269,6 +303,9 @@ impl Controls {
 impl Drop for Controls {
     fn drop(&mut self) {
         unsafe {
+            if !self.title_font.is_invalid() {
+                let _ = DeleteObject(self.title_font.into());
+            }
             if !self.font.is_invalid() {
                 let _ = DeleteObject(self.font.into());
             }
