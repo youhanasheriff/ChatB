@@ -14,7 +14,7 @@ Passed checks:
 
 The complete macOS Release build did not finish: Xcode remained fetching `swift-secp256k1`, and the local attempt was stopped. The full application test suite was not executed. CI includes a separate macOS Release build so unresolved build issues remain visible.
 
-Windows and Linux app binaries have not been implemented, built, or tested. The Rust CI matrix checks the workspace scaffolding on all three operating systems; it does not establish Bluetooth interoperability or finished-client support.
+At the initial scaffold milestone, Windows and Linux app binaries had not been implemented, built, or tested; later discovery milestones are recorded below. The Rust CI matrix checks the workspace scaffolding on all three operating systems; it does not establish Bluetooth interoperability or finished-client support.
 
 ## Subsequent CI verification
 
@@ -46,7 +46,7 @@ The local build script now removes injected `.xctest` bundles from its generated
 
 The macOS client now hosts a persistent desktop sidebar and inline direct/group conversations, with Terminal, Native Light and Graphite study palettes and the independent Bubble / Terminal preference. Existing Liquid Glass preferences remain supported. The [37-entry UI checklist](UI-IMPLEMENTATION.md) maps every gallery screen/state to its native presentation and records platform limits. Settings, identity, verification, image selection/preview and topology use shared desktop sheet styling; dense fingerprint/scanner content scrolls. Native system dialogs remain system controls.
 
-Desktop **Review clipboard** offers bounded text for the current conversation and requires confirmation before replacing the composer. It never sends automatically. Destination changes require a second confirmation. Settings exposes the screenshot privacy notice; automatic macOS screenshot detection and a macOS Share extension are not implemented. Windows/Linux UI remains pending.
+Desktop **Review clipboard** offers bounded text for the current conversation and requires confirmation before replacing the composer. It never sends automatically. Destination changes require a second confirmation. Settings exposes the screenshot privacy notice; automatic macOS screenshot detection and a macOS Share extension are not implemented. Windows/Linux conversation UI remains pending.
 
 The final arm64 Release build, ad-hoc signature and `codesign --verify --deep --strict` passed. Launch Services opened the new app. All **38 tests across 4 scoped suites** passed: `ViewSmokeTests`, `ComposerDraftStoreTests`, `ChatViewModelFormattingTests`, and `SharedContentHandoffTests`. They cover the three study palettes at a proposed 800 × 580 minimum window size, public/private selection, view branches, draft isolation, formatting and desktop import confirmation/rejection. Offscreen visual renders use a mock peer roster; hardware exchanges and destructive workflows were not exercised.
 
@@ -96,3 +96,9 @@ Passed checks:
 The Linux CI additions run the native workspace checks and a dedicated Rust 1.85 / Debian 12 build and simulated-BlueZ harness. These jobs have been added locally; a remote CI run has not been claimed. Windows/macOS compile only the portable Linux state/argument modules and an unsupported-platform entry point; they do not validate GTK or BlueZ.
 
 The container does not expose a physical Bluetooth controller. **Real discovery, peripheral advertising, GATT exchange, Noise authentication, messaging, secure storage, Wayland behavior, and distribution packaging remain unverified or unimplemented.** The shared Rust protocol/core/FFI crates remain scaffolds. The scanner does not join or advertise on the mesh. See [Linux development instructions](../apps/linux/README.md) for the exact build/check commands and hardware acceptance requirements.
+
+## Windows discovery preview — October 7, 2026
+
+`apps/windows` now contains a native Win32 discovery window and WinRT passive advertisement watcher, plus a separate terminal scanner. Portable tests cover CLI validation, mainnet/testnet filtering, bounded/sanitized observations and late callbacks. Windows-only tests cover actionable error mapping. Cross-target Windows compilation and Clippy are checked locally; the Windows preview workflow executes native tests and UI automation before packaging.
+
+The UI harness checks ready state, network toggles, real WinRT scan attempts (normally the no-radio path on hosted runners), retry, resizing and teardown. It records actual ready/error/minimum-size screenshots. Packaging verifies x64 PE headers and GUI/console subsystems, licenses, hashes, and launches executables extracted from the final ZIP. Passing these checks does not establish real-device interoperability. Windows 10/11 physical devices, radio power/removal, sleep/resume and accessibility still need qualification. See the Windows release notes and CI run attached to the release for actual publication evidence.

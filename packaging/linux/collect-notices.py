@@ -5,11 +5,13 @@ import json
 from pathlib import Path
 import sys
 
-metadata_path, output = map(Path, sys.argv[1:])
+metadata_path, output = map(Path, sys.argv[1:3])
+package_name = sys.argv[3] if len(sys.argv) > 3 else "bitchat-desktop-linux"
+platform_name = "Windows" if package_name == "bitchat-desktop-windows" else "Linux"
 metadata = json.loads(metadata_path.read_text())
 packages = {p['id']: p for p in metadata['packages']}
 nodes = {n['id']: n for n in metadata['resolve']['nodes']}
-root = next(p['id'] for p in packages.values() if p['name'] == 'bitchat-desktop-linux')
+root = next(p['id'] for p in packages.values() if p['name'] == package_name)
 resolved = set()
 pending = [root]
 while pending:
@@ -68,5 +70,5 @@ for identifier in sorted(resolved, key=lambda i: (packages[i]['name'], packages[
         else:
             parts.append(content)
             seen.add(digest)
-output.write_text('\n'.join(parts))
+output.write_text('\n'.join(parts).replace('Linux', platform_name).replace('GTK, GLib, libdbus and other system shared libraries are not bundled;\ninstall them through your distribution, which supplies their notices.', 'Windows system libraries are supplied by the operating system.' if platform_name == 'Windows' else 'GTK, GLib, libdbus and other system shared libraries are not bundled;\ninstall them through your distribution, which supplies their notices.'), encoding='utf-8')
 print(f'Collected notices for {count} Rust dependencies.')

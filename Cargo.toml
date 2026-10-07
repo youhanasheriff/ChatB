@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/protocol", "crates/core", "crates/ffi", "apps/linux"]
+members = ["crates/protocol", "crates/core", "crates/ffi", "apps/linux", "apps/windows"]
 exclude = ["apps/macos/localPackages/Arti"]
 
 [workspace.package]

@@ -4,7 +4,7 @@ The [vision and mission](VISION-AND-MISSION.md) define the product commitments. 
 
 ## Targets and status
 
-BitChat Desktop targets native macOS, Windows, and Linux interfaces with minimum practical installation size. The working source starting point is the inherited macOS Swift client. Windows and the shared Rust protocol/core/FFI crates remain scaffolds. Linux now has a GTK4/BlueZ discovery preview; it is not yet a messaging client.
+BitChat Desktop targets native macOS, Windows, and Linux interfaces with minimum practical installation size. The working source starting point is the inherited macOS Swift client. Windows has a Win32/WinRT discovery preview and Linux has a GTK4/BlueZ discovery preview. Neither is a messaging client. The shared Rust protocol/core/FFI crates remain scaffolds.
 
 ## Boundaries
 

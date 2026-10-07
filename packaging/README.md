@@ -52,3 +52,7 @@ bash packaging/linux/package-preview.sh target/release/bitchat-desktop dist "$(g
 ```
 
 The output includes a `.tar.gz`, SHA-256 sidecar, and JSON size/source manifest for each architecture. The archive carries the project license, locked Rust dependency notices, `Cargo.lock`, installation notes, and a record of linked system libraries. Packaging checks the ELF architecture and dependency resolution, then extracts and smoke-tests the packaged executable. GTK/GLib/libdbus and other system runtimes are dynamically linked and not bundled. See [Linux release notes](../docs/releases/linux-v0.1.0-preview.1.md).
+
+## Windows discovery preview
+
+Run `python packaging/windows/package-preview.py <source-commit>` on Windows after a native x64 release build with `RUSTFLAGS=-C target-feature=+crt-static`. The manual `windows-preview.yml` workflow runs at Rust 1.85.1, exercises the native UI, packages both GUI and console executables with notices and provenance, verifies PE headers, and smoke-tests the extracted archive. Assets are unsigned ZIP files with SHA-256 and JSON sidecars. See [release scope and installation](../docs/releases/windows-v0.1.0-preview.1.md). Only publish artifacts from a successful, reviewed run.

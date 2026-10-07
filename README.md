@@ -9,17 +9,17 @@ Read the [vision and mission](docs/VISION-AND-MISSION.md) and the [implementatio
 ## Current status
 
 - **macOS:** the upstream SwiftUI/CoreBluetooth implementation is retained in `apps/macos`, with a BitChat Desktop application product and separate bundle identity. The native macOS app builds and launches locally with the desktop UI, three study palettes, and Bubble / Terminal chats. See the [UI checklist](docs/UI-IMPLEMENTATION.md) and [validation notes](docs/SETUP-VALIDATION.md). Hardware interoperability remains to be verified.
-- **Windows:** native Win32 client planned; directory scaffold only.
+- **Windows:** native Win32 discovery preview with Windows Bluetooth LE scanning and a separate terminal scanner. See the [Windows README](apps/windows/README.md). Messaging and physical Bluetooth interoperability remain pending.
 - **Linux:** native GTK4 discovery preview with BlueZ scanning and a headless `--scan` command. See the [Linux README](apps/linux/README.md) for builds and checks. Messaging and physical Bluetooth interoperability remain pending.
 - **Shared Rust core:** workspace scaffolding only. Packet codecs, cryptography, routing, and Nostr implementation have not yet been ported or connected to the macOS app.
 
-Linux is available as a separate discovery-only preview; Windows has no release yet. Complete cross-platform messaging compatibility is not claimed.
+Windows and Linux are available as separate discovery-only previews. Complete cross-platform messaging compatibility is not claimed.
 
 ## Try the macOS early preview
 
 Visit the [BitChat Desktop website](https://youhanasheriff.github.io/bitchat-desktop-site/) or [download the macOS early preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/v0.1.0-preview.1).
 
-The preview targets **Apple silicon Macs running macOS 13 or later**. It is ad-hoc signed and **not notarized by Apple**; read the release's installation notes before downloading. A separate [Linux discovery preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/linux-v0.1.0-preview.1) is available for x86_64 and ARM64; it does not support messaging. Windows builds are coming later. This is an experimental preview, with hardware interoperability still to be qualified.
+The preview targets **Apple silicon Macs running macOS 13 or later**. It is ad-hoc signed and **not notarized by Apple**; read the release's installation notes before downloading. A separate [Linux discovery preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/linux-v0.1.0-preview.1) is available for x86_64 and ARM64; it does not support messaging. A [Windows x64 discovery preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/windows-v0.1.0-preview.1) is also available. This is an experimental preview, with hardware interoperability still to be qualified.
 
 The landing page is maintained separately in [bitchat-desktop-site](https://github.com/youhanasheriff/bitchat-desktop-site).
 

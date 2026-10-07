@@ -33,7 +33,7 @@ Baseline: BitChat Desktop setup commit `1bb00da`, following Bitchat `5e9287fae1e
 | Area | Current evidence | Remaining distinction |
 |---|---|---|
 | macOS | Inherited SwiftUI/CoreBluetooth code, BitChat Desktop product identity, passing package tests and complete Release build | Launch, application tests, and physical interoperability still need qualification |
-| Windows | Directory scaffold; Rust workspace compiles in Windows CI | No native Windows client or Bluetooth implementation |
+| Windows | Native Win32 window, WinRT advertisement scanner, terminal scanner and Windows validation workflow | Physical Bluetooth qualification, GATT transport, shared protocol and messaging remain |
 | Linux | GTK4 discovery preview and BlueZ scanner; headless scan command and Linux validation harness | Physical Bluetooth qualification, GATT transport, shared protocol, and messaging remain |
 | Shared Rust | Three compiling workspace crates | Protocol, core, and FFI behavior are not implemented |
 | Fixtures | Six copied upstream fixtures and seven Arti artifact hashes verified | Rust conformance runner and broader independent vectors remain |
@@ -111,7 +111,7 @@ A feature is done when its required implementation, positive/negative checks, up
 
 **Milestone:** M2. **Exit condition:** Each proposed platform can perform the required radio roles on documented physical hardware.
 
-- [ ] **RAD-01** Create a small Windows transport proof that scans for the pinned Bitchat service.
+- [ ] **RAD-01** Create a small Windows transport proof that scans for the pinned Bitchat service. Scanner implemented in `apps/windows`; physical-device evidence remains required.
 - [ ] **RAD-02** Create a small Linux transport proof that scans for the same service. Scanner implemented in `apps/linux`; physical-device evidence remains required.
 - [ ] **RAD-03** Prove peripheral advertising and GATT-server operation on Windows hardware.
 - [ ] **RAD-04** Prove peripheral advertising and GATT-server operation on Linux hardware.
