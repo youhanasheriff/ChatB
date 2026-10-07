@@ -2,11 +2,11 @@
 
 The first Linux implementation is a **native GTK4 discovery preview**, written in Rust. It scans through BlueZ for the Bitchat Bluetooth service and shows matching devices. A headless command uses the same discovery backend.
 
-This is not yet a messenger: advertising, GATT connections, packet codecs, Noise authentication, shared-core integration, secure storage, Nostr, notifications, and packaging remain to be implemented. A discovered device is not a verified Bitchat identity. Bluetooth hardware interoperability has not been qualified.
+This is not yet a messenger: advertising, GATT connections, packet codecs, Noise authentication, shared-core integration, secure storage, Nostr, and notifications remain to be implemented. A discovered device is not a verified Bitchat identity. Bluetooth hardware interoperability has not been qualified.
 
 ## Download the discovery preview
 
-Download the [Linux preview archives](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/linux-v0.1.0-preview.1) for x86_64 or ARM64. Read the [installation notes](../../docs/releases/linux-v0.1.0-preview.1.md) for runtime dependencies, checksum verification, and the discovery-only scope. These are unsigned archives, not self-contained bundles or distro packages.
+Download the [Linux preview installers](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/linux-v0.1.0-preview.2) for x86_64 or ARM64. Read the [installation notes](../../docs/releases/linux-v0.1.0-preview.2.md) for runtime dependencies, checksum verification, and the discovery-only scope. Installable `.deb` packages for Debian 12 / Ubuntu 24.04 provide an application-menu entry and automatic runtime dependency installation through APT. Portable archives remain an alternative.
 
 ## Build and run
 

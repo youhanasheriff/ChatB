@@ -17,7 +17,8 @@ if source != subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).st
 subprocess.run(['git', 'diff', '--exit-code', '--', 'Cargo.lock'], check=True)
 out = repo / 'dist'
 out.mkdir(exist_ok=True)
-name = 'BitChat-Desktop-0.1.0-preview.1-windows-x86_64'
+version = '0.1.0-preview.2'
+name = f'BitChat-Desktop-{version}-windows-x86_64'
 archive = out / (name + '.zip')
 if archive.exists():
     raise SystemExit('Refusing to overwrite an archive')
@@ -36,13 +37,13 @@ with tempfile.TemporaryDirectory() as temp:
             raise SystemExit('Incorrect GUI/console subsystem')
         shutil.copy2(binary, stage / filename)
         binaries[filename] = {'sha256': sha(binary), 'bytes': len(data)}
-    for src, dest in [('LICENSE','LICENSE.txt'),('Cargo.lock','Cargo.lock'),('docs/releases/windows-v0.1.0-preview.1.md','README.md')]:
+    for src, dest in [('LICENSE','LICENSE.txt'),('Cargo.lock','Cargo.lock'),('docs/releases/windows-v0.1.0-preview.2.md','README.md')]:
         shutil.copy2(repo / src, stage / dest)
     metadata = subprocess.check_output(['cargo','metadata','--locked','--format-version','1','--filter-platform','x86_64-pc-windows-msvc'], cwd=repo)
     metadata_path = Path(temp) / 'metadata.json'
     metadata_path.write_bytes(metadata)
     subprocess.run([sys.executable, str(repo/'packaging/linux/collect-notices.py'), str(metadata_path), str(stage/'THIRD-PARTY-NOTICES.txt'), 'bitchat-desktop-windows'], check=True)
-    manifest = {'version':'0.1.0-preview.1','platform':'windows','architecture':'x86_64','source_commit':source,'scope':'Bluetooth discovery only; no messaging; physical hardware unqualified','minimum_os':'Windows 10 22H2 (API baseline); Windows 11 recommended; CI on Windows Server 2025','signing':'unsigned','binaries':binaries}
+    manifest = {'version':version,'platform':'windows','architecture':'x86_64','source_commit':source,'scope':'Bluetooth discovery only; no messaging; physical hardware unqualified','minimum_os':'Windows 10 22H2 (API baseline); Windows 11 recommended; CI on Windows Server 2025','signing':'unsigned','binaries':binaries}
     (stage/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n', encoding='utf-8')
     with zipfile.ZipFile(archive,'x',zipfile.ZIP_DEFLATED,compresslevel=9) as zipped:
         for path in sorted(stage.rglob('*')):
@@ -55,6 +56,18 @@ with tempfile.TemporaryDirectory() as temp:
         if sha(unpacked/name/binary) != info['sha256']: raise SystemExit('Packaged binary differs')
     subprocess.run([str(unpacked/name/'bitchat-scan.exe'),'--version'],check=True,timeout=10)
     subprocess.run([str(unpacked/name/'bitchat-desktop-windows.exe'),'--smoke-test'],check=True,timeout=15)
+    installer = out / (name + '-setup.exe')
+    compiler = Path(r'C:\Program Files (x86)\Inno Setup 6\ISCC.exe')
+    if installer.exists(): raise SystemExit('Refusing to overwrite an installer')
+    if not compiler.is_file(): raise SystemExit('Install Inno Setup 6 before packaging')
+    subprocess.run([str(compiler), f'/DSourceDir={stage}', f'/DOutputDir={out}',
+                    f'/DReleaseVersion={version}', str(repo/'packaging/windows/installer.iss')],check=True)
+    installer_manifest = dict(manifest, installer=installer.name, package_type='inno-setup',
+                              sha256=sha(installer), bytes=installer.stat().st_size)
+    Path(str(installer)+'.sha256').write_text(f"{sha(installer)}  {installer.name}\n",encoding='utf-8')
+    Path(str(installer)+'.json').write_text(json.dumps(installer_manifest,indent=2)+'\n',encoding='utf-8')
+    subprocess.run(['pwsh','-NoProfile','-File',str(repo/'packaging/windows/check-install.ps1'),
+                    '-Installer',str(installer),'-Manifest',str(installer)+'.json'],check=True,timeout=180)
     manifest.update(archive=archive.name,sha256=sha(archive),bytes=archive.stat().st_size)
     archive.with_suffix('.zip.sha256').write_text(f"{sha(archive)}  {archive.name}\n",encoding='utf-8')
     archive.with_suffix('.zip.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')

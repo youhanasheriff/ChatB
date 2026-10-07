@@ -1,4 +1,4 @@
-name: Build Linux preview archives
+name: Build Linux preview packages
 
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
       - name: Install build and validation dependencies
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends libgtk-4-dev libdbus-1-dev pkg-config xvfb xauth dbus-x11 python3-dbusmock
+          apt-get install -y --no-install-recommends libgtk-4-dev libdbus-1-dev pkg-config xvfb xauth dbus-x11 python3-dbusmock dpkg-dev desktop-file-utils
       - name: Run state, UI, and simulated Bluetooth checks
         run: bash apps/linux/scripts/check.sh
       - name: Build and package the native Release binary
@@ -40,3 +40,34 @@ jobs:
           path: dist/*
           if-no-files-found: error
           retention-days: 30
+
+  install:
+    name: Install and remove (${{ matrix.arch }}, ${{ matrix.distro }})
+    needs: package
+    strategy:
+      fail-fast: false
+      matrix:
+        distro: [debian:12, ubuntu:24.04]
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+        arch: [x86_64, aarch64]
+    runs-on: ${{ matrix.runner }}
+    container:
+      image: ${{ matrix.distro }}
+      options: --init
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/download-artifact@v4
+        with:
+          name: linux-preview-${{ matrix.arch }}
+          path: dist
+      - name: Install validation tools in a clean runtime image
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends xvfb xauth dbus-x11 desktop-file-utils ca-certificates
+      - name: Install dependencies, launch, reinstall, and remove
+        run: bash packaging/linux/check-install.sh dist/*.deb

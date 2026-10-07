@@ -19,7 +19,7 @@ Windows and Linux are available as separate discovery-only previews. Complete cr
 
 Visit the [BitChat Desktop website](https://youhanasheriff.github.io/bitchat-desktop-site/) or [download the macOS early preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/v0.1.0-preview.1).
 
-The preview targets **Apple silicon Macs running macOS 13 or later**. It is ad-hoc signed and **not notarized by Apple**; read the release's installation notes before downloading. A separate [Linux discovery preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/linux-v0.1.0-preview.1) is available for x86_64 and ARM64; it does not support messaging. A [Windows x64 discovery preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/windows-v0.1.0-preview.1) is also available. This is an experimental preview, with hardware interoperability still to be qualified.
+The preview targets **Apple silicon Macs running macOS 13 or later**. It is ad-hoc signed and **not notarized by Apple**; read the release's installation notes before downloading. A separate [Linux discovery preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/linux-v0.1.0-preview.2) is available for x86_64 and ARM64; it does not support messaging. A [Windows x64 discovery preview](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/windows-v0.1.0-preview.2) is also available. This is an experimental preview, with hardware interoperability still to be qualified.
 
 The landing page is maintained separately in [bitchat-desktop-site](https://github.com/youhanasheriff/bitchat-desktop-site).
 

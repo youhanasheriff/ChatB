@@ -5,7 +5,7 @@ repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source_binary="${1:?Usage: package-preview.sh BINARY OUTPUT_DIR SOURCE_COMMIT}"
 output="${2:?Provide an output directory}"
 source_commit="${3:?Provide the source commit used for the binary}"
-version=0.1.0-preview.1
+version=0.1.0-preview.2
 [[ "$(uname -s)" == Linux ]] || { echo 'Package this target on Linux.' >&2; exit 1; }
 case "$(uname -m)" in
   x86_64) architecture=x86_64; target=x86_64-unknown-linux-gnu ;;
@@ -30,7 +30,7 @@ cargo metadata --manifest-path "$repo/Cargo.toml" --locked --format-version 1 \
   --filter-platform "$target" > "$stage/metadata.json"
 python3 "$repo/packaging/linux/collect-notices.py" "$stage/metadata.json" "$stage/$name/THIRD-PARTY-NOTICES.txt"
 cp "$repo/LICENSE" "$stage/$name/LICENSE.txt"
-cp "$repo/docs/releases/linux-v0.1.0-preview.1.md" "$stage/$name/README.md"
+cp "$repo/docs/releases/linux-v$version.md" "$stage/$name/README.md"
 cp "$repo/Cargo.lock" "$stage/$name/Cargo.lock"
 ldd "$stage/$name/bitchat-desktop" > "$stage/$name/system-libraries.txt"
 if grep -q 'not found' "$stage/$name/system-libraries.txt"; then
@@ -72,3 +72,5 @@ cmp "$source_binary" "$packaged"
 "$packaged" --version
 timeout 20s dbus-run-session -- xvfb-run -a env GSK_RENDERER=cairo GTK_A11Y=none "$packaged" --smoke-test
 echo "Verified Linux preview: $archive"
+
+python3 "$repo/packaging/linux/package-deb.py" "$archive"

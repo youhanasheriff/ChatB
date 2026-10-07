@@ -56,3 +56,11 @@ The output includes a `.tar.gz`, SHA-256 sidecar, and JSON size/source manifest 
 ## Windows discovery preview
 
 Run `python packaging/windows/package-preview.py <source-commit>` on Windows after a native x64 release build with `RUSTFLAGS=-C target-feature=+crt-static`. The manual `windows-preview.yml` workflow runs at Rust 1.85.1, exercises the native UI, packages both GUI and console executables with notices and provenance, verifies PE headers, and smoke-tests the extracted archive. Assets are unsigned ZIP files with SHA-256 and JSON sidecars. See [release scope and installation](../docs/releases/windows-v0.1.0-preview.1.md). Only publish artifacts from a successful, reviewed run.
+
+## Installable previews (preview 2)
+
+Windows packaging now also compiles `packaging/windows/installer.iss` with Inno Setup 6. The per-user Setup executable installs both binaries, a Start menu shortcut and an Installed apps entry. The Windows pipeline verifies install/reinstall, installed byte hashes, launch and uninstall cleanup with `check-install.ps1`. Run this only on an isolated test machine.
+
+Linux packaging also builds `bitchat-desktop_0.1.0~preview.2-1_{amd64,arm64}.deb` from the verified archive payload. ELF dependencies are derived with `dpkg-shlibdeps`, plus BlueZ. The package installs a desktop launcher, icon and command in `/usr/bin`. The Linux workflow tests installation, dependency resolution, unprivileged GTK launch, reinstall and removal on clean Debian 12 and Ubuntu 24.04 containers for both architectures. No RPM package or automatic update repository is provided yet.
+
+Every installer has its own SHA-256 and source-provenance JSON. The source release tag and provenance must agree. Historical preview 1 assets remain unchanged.

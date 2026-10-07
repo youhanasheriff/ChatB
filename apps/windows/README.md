@@ -2,7 +2,9 @@
 
 Native Win32 **discovery preview**, using Windows Bluetooth/WinRT. Finds advertisements for the pinned Bitchat mainnet UUID; the isolated debug service is explicitly opt-in. There is no advertising, GATT transport, messaging, shared protocol integration, persistence, or verified identity yet.
 
-[Download and release notes](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/windows-v0.1.0-preview.1) · [requirements and limitations](../../docs/releases/windows-v0.1.0-preview.1.md)
+[Download and release notes](https://github.com/youhanasheriff/bitchat-desktop/releases/tag/windows-v0.1.0-preview.2) · [requirements and limitations](../../docs/releases/windows-v0.1.0-preview.2.md)
+
+Download the Setup `.exe` for per-user installation, a Start menu shortcut, and removal through Installed apps. A portable ZIP remains available. See the release notes for checksum verification and unsigned-installer limitations.
 
 ## Build on Windows x64
 

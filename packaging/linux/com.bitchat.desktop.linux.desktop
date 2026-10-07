@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=BitChat Desktop
+GenericName=Bluetooth discovery
+Comment=Discover nearby Bitchat devices — discovery preview only
+Exec=bitchat-desktop
+TryExec=bitchat-desktop
+Icon=com.bitchat.desktop.linux
+Terminal=false
+Categories=Network;
+Keywords=Bluetooth;Bitchat;Discovery;
+StartupNotify=true
+StartupWMClass=com.bitchat.desktop.linux
