@@ -23,6 +23,6 @@ Keep protocol identifiers, signature rules, envelopes, and session behavior alig
 
 ## License and dependencies
 
-The initial source uses the Unlicense, retained verbatim at the repository root. Existing author/source notices remain. Arti and other dependencies retain their respective licenses and provenance. Redistribution requires carrying the relevant dependency notices.
+Original BitChat Desktop contributions use the [MIT License](../LICENSE), except where a file states otherwise. The inherited Bitchat source retains its Unlicense dedication, preserved verbatim in [LICENSES/Bitchat-Unlicense.txt](../LICENSES/Bitchat-Unlicense.txt). Existing author/source notices remain. Arti and other dependencies retain their respective licenses and provenance. Redistribution requires carrying the relevant license and dependency notices. Previously published versions retain their original license grants.
 
 BitChat Desktop does not claim to be an official Bitchat distribution.

@@ -157,4 +157,4 @@ bitchat is an open source project. For privacy questions:
 
 ---
 
-*This policy is released into the public domain under The Unlicense, like the project itself.*
+*This policy is released into the public domain under [The Unlicense](LICENSES/Bitchat-Unlicense.txt).*

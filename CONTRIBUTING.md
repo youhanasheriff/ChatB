@@ -7,3 +7,5 @@ Keep protocol changes backed by independent fixtures and real-client interoperab
 For Rust changes, run the workspace checks in the README. For Apple changes, build the BitChat Desktop macOS scheme and run the relevant Swift tests. New platform code needs verification on its target operating system, including actual Bluetooth hardware for transport changes.
 
 Describe behavior, validation, and remaining limitations in pull requests. Application size includes required dependencies, not just the main executable.
+
+Unless explicitly stated otherwise, new contributions are provided under the [MIT License](LICENSE). Preserve existing file-level licenses and upstream/dependency attribution when editing inherited code.

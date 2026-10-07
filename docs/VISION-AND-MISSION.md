@@ -58,7 +58,7 @@ An application that looks complete but cannot reconnect, retain the intended sta
 
 ### Open ownership and maintenance
 
-BitChat Desktop is a personal open-source project maintained under [youhanasheriff/bitchat-desktop](https://github.com/youhanasheriff/bitchat-desktop). It retains Bitchat's history and attribution and uses the [Unlicense](../LICENSE); dependencies retain their own licenses.
+BitChat Desktop is a personal open-source project maintained under [youhanasheriff/bitchat-desktop](https://github.com/youhanasheriff/bitchat-desktop). Original project contributions use the [MIT License](../LICENSE), except where otherwise stated. It retains Bitchat's history, attribution, and [upstream Unlicense](../LICENSES/Bitchat-Unlicense.txt); dependencies retain their own licenses.
 
 The project must be buildable without this laptop's company-specific hooks, private infrastructure, or inherited signing identity. Release credentials remain outside source control.
 

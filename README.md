@@ -84,6 +84,8 @@ Start with the pinned upstream behavior and independent interoperability fixture
 
 ## License
 
-BitChat Desktop retains Bitchat's **Unlicense** dedication. See [LICENSE](LICENSE). Bundled dependencies retain their own licenses and attribution; the root license does not replace them.
+BitChat Desktop's original code and documentation are available under the **[MIT License](LICENSE)**, except where a file states otherwise. You can use, modify, and redistribute them for personal or commercial purposes, subject to the license's notice requirements.
+
+Inherited Bitchat code retains its [Unlicense](LICENSES/Bitchat-Unlicense.txt) dedication and existing author notices. Dependencies retain their own licenses and attribution. Earlier versions, including `v0.1.0-preview.1`, remain available under the licenses with which they were released; this change does not revoke earlier grants.
 
 BitChat Desktop is independently maintained by [Youhana Sheriff](https://github.com/youhanasheriff). It is not an official Bitchat release.

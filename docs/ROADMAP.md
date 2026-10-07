@@ -71,7 +71,7 @@ A feature is done when its required implementation, positive/negative checks, up
 **Milestone:** M0 / M1. **Exit condition:** The project is public, attributable, and organized; implementation completeness is tracked separately.
 
 - [x] **FND-01** Publish BitChat Desktop under the personal `youhanasheriff` GitHub account as a public Bitchat fork.
-- [x] **FND-02** Retain upstream Git history, author/source notices, and the root Unlicense.
+- [x] **FND-02** Retain upstream Git history, author/source notices, and the upstream Unlicense in `LICENSES/Bitchat-Unlicense.txt`. Original project contributions use MIT.
 - [x] **FND-03** Keep `origin` pointing to BitChat Desktop and `upstream` pointing to Bitchat.
 - [x] **FND-04** Create `apps/macos`, `apps/windows`, and `apps/linux`.
 - [x] **FND-05** Create the protocol, core, and FFI Rust workspace crates.

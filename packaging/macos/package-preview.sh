@@ -34,6 +34,7 @@ python3 "$repo/packaging/macos/collect-notices.py" "$repo" "$metadata" \
   "$app/Contents/Resources/THIRD-PARTY-NOTICES.txt"
 if [[ $# -lt 4 ]]; then rm "$metadata"; fi
 cp "$repo/LICENSE" "$app/Contents/Resources/LICENSE.txt"
+cp "$repo/LICENSES/Bitchat-Unlicense.txt" "$app/Contents/Resources/Bitchat-Unlicense.txt"
 cp "$repo/docs/releases/v0.1.0-preview.1.md" "$stage/README.md"
 codesign -d --entitlements :- "$app" > "$stage/entitlements.plist" 2>/dev/null
 python3 - "$app" "$source_commit" <<'PY'

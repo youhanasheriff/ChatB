@@ -14,7 +14,8 @@ metadata = json.loads(metadata_path.read_text())
 resolved = {node["id"] for node in metadata["resolve"]["nodes"]}
 texts = Path(__file__).parent / "license-texts"
 parts = ["BitChat Desktop — third-party notices\n\n"
-         "Bitchat and BitChat Desktop are dedicated under the Unlicense.\n"
+         "Original BitChat Desktop contributions use MIT unless otherwise stated.\n"
+         "Inherited Bitchat code retains its Unlicense dedication.\n"
          "Dependencies retain their respective licenses. This inventory is a\n"
          "conservative superset of the macOS Arti dependency graph, including\n"
          "build/dev dependencies. Their presence here does not imply every\n"
@@ -24,6 +25,8 @@ parts = ["BitChat Desktop — third-party notices\n\n"
          "MPL-covered source is available at the exact source archive URLs\n"
          "listed below, without charge; the dependencies are unmodified.\n"]
 parts.append((repo / "LICENSE").read_text())
+parts.append("\nInherited Bitchat source — Unlicense\n\n" +
+             (repo / "LICENSES/Bitchat-Unlicense.txt").read_text())
 seen_texts = set()
 
 
