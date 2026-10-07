@@ -1555,6 +1555,7 @@ final class ChatViewModel: ObservableObject, BitchatDelegate, SynchronousMessage
     @MainActor
     @discardableResult
     func panicClearAllData(restartServices: Bool = true) -> Bool {
+        DesktopDebugSettings.shared.panicReset()
         panicRecoveryBlocked = true
         isPanicResetting = true
         defer { isPanicResetting = false }

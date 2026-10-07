@@ -59,3 +59,9 @@ The desktop shell adds a persistent, collapsible sidebar, inline direct/group co
 The scoped native test run covers view rendering, all three study palettes at a proposed 800 × 580 minimum size, inline private/public selection, draft isolation, message formatting, and desktop import confirmation. Local visual render artifacts use only a mock peer roster. No real message was sent, recording started, or wipe executed during validation.
 
 Build, signature, test count and bundle size are recorded in [SETUP-VALIDATION.md](SETUP-VALIDATION.md). Design PNGs and gallery files are not bundled in the app.
+
+## Desktop debug settings
+
+Settings → debugging now exposes a persistent Debug mode toggle and a native sheet with Overview, Peers and Console tabs. Overview reads the live Bluetooth managers, scan/advertising state, link counts, discovery queue and retained private-message count. Tools offer temporary continuous scanning, discovery refresh/announce, bounded outbox retry and the existing topology map. Peers shows shortened IDs, connectivity, Noise session state, signature-verified announces and mesh ping results.
+
+Capture is off by default and retains at most 300 typed events in memory, with counters since the last clear. Copy report includes build/network details and those diagnostics, excluding message content, nicknames, full peer keys, locations and relay addresses. Turning Debug mode off clears capture and restores adaptive scanning; panic wipe also resets the preference. The continuous-scan override is not persisted. No Android Wi-Fi Aware controls, custom GATT limits, packet-rate graphs or sync-protocol tuning are exposed by this desktop implementation.

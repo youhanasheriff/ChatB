@@ -217,6 +217,7 @@ final class ChatVerificationCoordinator {
                     guard let self else { return }
 
                     SecureLogger.debug("🔐 Authenticated: \(peerID)", category: .security)
+                    DesktopDebugCapture.shared.record(.authenticated, peerID: peerID)
                     self.context.privateMediaPeerDidAuthenticate(peerID)
 
                     if self.context.isVerifiedFingerprint(fingerprint) {
@@ -274,6 +275,7 @@ final class ChatVerificationCoordinator {
                 DispatchQueue.main.async { [weak self] in
                     guard let self else { return }
                     self.context.setEncryptionStatus(.noiseHandshaking, for: peerID)
+                    DesktopDebugCapture.shared.record(.handshake, peerID: peerID)
                     self.context.invalidateEncryptionCache(for: peerID)
                 }
             }

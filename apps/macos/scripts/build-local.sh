@@ -8,6 +8,14 @@ scheme="BitChat Desktop (macOS)"
 architecture="$(uname -m)"
 configuration="${CONFIGURATION:-Release}"
 derived_data=".DerivedData"
+build_settings=()
+if [[ "${INTEROP:-0}" == "1" ]]; then
+  if [[ "$configuration" != "Debug" ]]; then
+    echo "INTEROP=1 is only for CONFIGURATION=Debug (Release already uses the normal mesh)." >&2
+    exit 1
+  fi
+  build_settings+=("SWIFT_ACTIVE_COMPILATION_CONDITIONS=DEBUG BITCHAT_INTEROP")
+fi
 
 xcodebuild -resolvePackageDependencies -project "$project" -scheme "$scheme" \
   -derivedDataPath "$derived_data" -skipPackageUpdates
@@ -43,7 +51,7 @@ PY
 xcodebuild -project "$project" -scheme "$scheme" -configuration "$configuration" \
   -destination "platform=macOS,arch=$architecture" -derivedDataPath "$derived_data" \
   -disableAutomaticPackageResolution -skipPackageUpdates \
-  ARCHS="$architecture" ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO build
+  ARCHS="$architecture" ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO "${build_settings[@]}" build
 
 app="$derived_data/Build/Products/$configuration/BitChat Desktop.app"
 # Xcode test actions can leave an injected (or partially built) test bundle

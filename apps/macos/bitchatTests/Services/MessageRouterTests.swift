@@ -13,6 +13,151 @@ import BitFoundation
 struct MessageRouterTests {
 
     @Test @MainActor
+    func timedRetry_recoversLostPrivateSendWithoutReconnect() {
+        let peer = PeerID(str: "0000000000000041")
+        let transport = MockTransport()
+        transport.connectedPeers = [peer]
+        transport.securePeers = [peer]
+        let clock = MutableTestClock()
+        let router = MessageRouter(transports: [transport], now: { clock.now })
+        router.sendPrivate("Lost first ciphertext", to: peer, recipientNickname: "Peer", messageID: "lost")
+
+        clock.now += 9
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 1)
+        clock.now += 1
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.map(\.messageID) == ["lost", "lost"])
+        #expect(transport.sentPrivateMessages.allSatisfy { $0.content == "Lost first ciphertext" })
+
+        // Subsequent retries back off, even when the sweep runs often.
+        clock.now += 19
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 2)
+        clock.now += 1
+        transport.onSendPrivateMessage = { id in
+            router.markDelivered(id, from: [peer])
+        }
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 3)
+        clock.now += 120
+        router.retryUnacknowledgedPrivateMessages()
+        router.flushOutbox(for: peer)
+        #expect(transport.sentPrivateMessages.count == 3)
+    }
+
+    @Test @MainActor
+    func timedRetry_waitsForHandshakeDrainBeforeRetryingMissingAck() {
+        let peer = PeerID(str: "0000000000000042")
+        let transport = MockTransport()
+        transport.connectedPeers = [peer]
+        transport.securePeers = []
+        let clock = MutableTestClock()
+        let router = MessageRouter(transports: [transport], now: { clock.now })
+        router.sendPrivate("Queued for handshake", to: peer, recipientNickname: "Peer", messageID: "handshake")
+        clock.now += 30
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 1)
+
+        transport.securePeers = [peer]
+        router.retrySecurePrivateMessagesAfterAuthentication(for: [peer])
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 1)
+        clock.now += 10
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 2)
+    }
+
+    @Test @MainActor
+    func timedRetry_doesNotSendToDisconnectedOrMerelyReachablePeer() {
+        let peer = PeerID(str: "0000000000000043")
+        let transport = MockTransport()
+        transport.connectedPeers = [peer]
+        transport.reachablePeers = [peer]
+        transport.securePeers = [peer]
+        let clock = MutableTestClock()
+        let router = MessageRouter(transports: [transport], now: { clock.now })
+        router.sendPrivate("Hello", to: peer, recipientNickname: "Peer", messageID: "offline")
+        transport.connectedPeers = []
+        clock.now += 60
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 1)
+
+        transport.connectedPeers = [peer]
+        transport.securePeers = []
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 1)
+    }
+
+    @Test @MainActor
+    func timedRetry_ackAndDeadlineAreScopedToRecipient() {
+        let first = PeerID(str: "0000000000000044")
+        let second = PeerID(str: "0000000000000045")
+        let transport = MockTransport()
+        transport.connectedPeers = [first, second]
+        transport.securePeers = [first, second]
+        let clock = MutableTestClock()
+        let router = MessageRouter(transports: [transport], now: { clock.now })
+        router.sendPrivate("First", to: first, recipientNickname: "First", messageID: "shared")
+        clock.now += 5
+        router.sendPrivate("Second", to: second, recipientNickname: "Second", messageID: "shared")
+        router.markDelivered("shared", from: [first])
+        clock.now += 5
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 2)
+        clock.now += 5
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.map(\.peerID) == [first, second, second])
+        router.markDelivered("shared", from: [second])
+        clock.now += 120
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 3)
+    }
+
+    @Test @MainActor
+    func timedRetry_capsAttemptsAndSurfacesFailure() {
+        let peer = PeerID(str: "0000000000000046")
+        let transport = MockTransport()
+        transport.connectedPeers = [peer]
+        transport.securePeers = [peer]
+        let clock = MutableTestClock()
+        let router = MessageRouter(transports: [transport], now: { clock.now })
+        var dropped: [String] = []
+        router.onMessageDropped = { id, recipient in
+            #expect(recipient == peer)
+            dropped.append(id)
+        }
+        router.sendPrivate("No acknowledgements", to: peer, recipientNickname: "Peer", messageID: "unacked")
+        for _ in 0..<10 {
+            clock.now += 60
+            router.retryUnacknowledgedPrivateMessages()
+        }
+        #expect(transport.sentPrivateMessages.count == 8)
+        #expect(dropped == ["unacked"])
+    }
+
+    @Test @MainActor
+    func timedRetry_respectsRecentAuthenticationResendAndWipe() {
+        let peer = PeerID(str: "0000000000000047")
+        let transport = MockTransport()
+        transport.connectedPeers = [peer]
+        transport.securePeers = [peer]
+        let clock = MutableTestClock()
+        let router = MessageRouter(transports: [transport], now: { clock.now })
+        router.sendPrivate("Hello", to: peer, recipientNickname: "Peer", messageID: "reauth")
+        clock.now += 9
+        router.retrySecurePrivateMessagesAfterAuthentication(for: [peer])
+        #expect(transport.sentPrivateMessages.count == 2)
+        clock.now += 1
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 2)
+        router.wipeOutbox()
+        clock.now += 120
+        router.retryUnacknowledgedPrivateMessages()
+        #expect(transport.sentPrivateMessages.count == 2)
+    }
+
+    @Test @MainActor
     func sendPrivate_usesReachableTransport() async {
         let peerID = PeerID(str: "0000000000000001")
         let transportA = MockTransport()

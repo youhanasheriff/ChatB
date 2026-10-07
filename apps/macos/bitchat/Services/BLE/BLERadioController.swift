@@ -51,6 +51,14 @@ final class BLERadioController {
     private var dutyOffDuration: TimeInterval = TransportConfig.bleDutyOffDuration
     private var dutyActive: Bool = false
 
+    var continuousScanning: Bool { !dutyEnabled }
+
+    func setContinuousScanning(_ enabled: Bool, connectedCount: Int) {
+        stopDutyCycle()
+        dutyEnabled = !enabled
+        updateScanningDutyCycle(connectedCount: connectedCount)
+    }
+
     init(
         queue: DispatchQueue,
         linkStateStore: BLELinkStateStore,
@@ -297,6 +305,8 @@ final class BLERadioController {
     /// Panic wipe: drop the candidate queue, backoff state, and RSSI
     /// adaptation with the identity they served.
     func reset() {
+        stopDutyCycle()
+        dutyEnabled = true
         scheduler.reset()
     }
 

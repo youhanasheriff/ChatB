@@ -48,6 +48,18 @@ final class AppChromeModel: ObservableObject {
         self.nickname = chatViewModel.nickname
 
         bind(privateInboxModel: privateInboxModel)
+        // This observer lives with the app, so closing the debug sheet does
+        // not prevent the Settings toggle or panic wipe restoring scan duty.
+        let mesh = chatViewModel.meshService
+        NotificationCenter.default.publisher(for: DesktopDebugSettings.didChange)
+            .sink { [weak mesh] _ in
+                Task { @MainActor in
+                    if !DesktopDebugSettings.shared.isEnabled {
+                        (mesh as? BLEService)?.setDesktopContinuousScanning(false)
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 
     var shouldSuppressScreenshotNotification: Bool {
@@ -110,6 +122,10 @@ final class AppChromeModel: ObservableObject {
         }
         let edges = snapshot.edges.map { ($0.a.id, $0.b.id) }
         return MeshTopologyDisplayModel(nodes: nodes, edges: edges)
+    }
+
+    func makeDesktopDebugModel() -> DesktopDebugModel {
+        DesktopDebugModel(transport: chatViewModel.meshService, router: chatViewModel.messageRouter)
     }
 
     func triggerScreenshotPrivacyWarning() {

@@ -38,6 +38,8 @@ struct ChatViewModelServiceBundle {
 
         self.commandProcessor = commandProcessor
         self.messageRouter = messageRouter
+        _ = DesktopDebugSettings.shared
+        messageRouter.startPrivateDeliveryRetries()
         self.privateChatManager = privateChatManager
         self.unifiedPeerService = unifiedPeerService
         self.autocompleteService = AutocompleteService()

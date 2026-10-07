@@ -183,7 +183,9 @@ final class BLEService: NSObject {
     
     // MARK: - Constants
     
-    #if DEBUG
+    // Opt-in debug builds can test against released phone clients while
+    // ordinary debug/test runs retain the isolated service UUID.
+    #if DEBUG && !BITCHAT_INTEROP
     static let serviceUUID = CBUUID(string: "F47B5E2D-4A9E-4C5A-9B3F-8E1D2C3A4B5A") // testnet
     #else
     static let serviceUUID = CBUUID(string: "F47B5E2D-4A9E-4C5A-9B3F-8E1D2C3A4B5C") // mainnet
@@ -3751,6 +3753,59 @@ extension BLEService {
     }
 
     // MARK: - Mesh Diagnostics (/ping, /trace, topology map)
+
+    /// Read CoreBluetooth on its owning queue, with no synchronous hop to
+    /// main (main can already be waiting on this queue for sends).
+    func captureDesktopRadioSnapshot(completion: @escaping @MainActor (DesktopBLERadioSnapshot) -> Void) {
+        bleQueue.async { [weak self] in
+            guard let self else { return }
+            let links = self.linkStateStore.peripheralStates
+            let snapshot = DesktopBLERadioSnapshot(
+                central: Self.diagnosticManagerState(self.centralManager?.state ?? .unknown),
+                peripheral: Self.diagnosticManagerState(self.peripheralManager?.state ?? .unknown),
+                scanning: self.centralManager?.isScanning ?? false,
+                advertising: self.peripheralManager?.isAdvertising ?? false,
+                outboundLinks: links.filter { $0.isConnected }.count,
+                inboundLinks: self.linkStateStore.subscribedCentralCount,
+                connecting: links.filter { $0.isConnecting && !$0.isConnected }.count,
+                candidates: self.radio.candidateCount,
+                continuousScanning: self.radio.continuousScanning
+            )
+            Task { @MainActor in completion(snapshot) }
+        }
+    }
+
+    func setDesktopContinuousScanning(_ enabled: Bool) {
+        bleQueue.async { [weak self] in
+            guard let self else { return }
+            let allowed = enabled && DesktopDebugCapture.shared.isEnabled && !self.isPanicSuspended
+            self.radio.setContinuousScanning(allowed, connectedCount: self.peerRegistry.read { $0.connectedCount })
+        }
+    }
+
+    func refreshDesktopDiscovery() {
+        guard let generation = capturePanicLifecycleGeneration() else { return }
+        bleQueue.async { [weak self] in
+            guard let self, self.isCurrentPanicLifecycleGeneration(generation),
+                  DesktopDebugCapture.shared.isEnabled,
+                  self.centralManager?.state == .poweredOn else { return }
+            self.centralManager?.stopScan()
+            self.radio.startScanning()
+            self.sendAnnounce(forceSend: true)
+        }
+    }
+
+    private static func diagnosticManagerState(_ state: CBManagerState) -> String {
+        switch state {
+        case .unknown: return "unknown"
+        case .resetting: return "resetting"
+        case .unsupported: return "unsupported"
+        case .unauthorized: return "unauthorized"
+        case .poweredOff: return "powered off"
+        case .poweredOn: return "powered on"
+        @unknown default: return "unknown"
+        }
+    }
 
     /// Sends a directed unencrypted ping probe (8-byte nonce + origin TTL).
     /// The completion fires exactly once on the main actor: with RTT/hops

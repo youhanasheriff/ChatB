@@ -268,6 +268,7 @@ final class ChatTransportEventCoordinator {
 
     @MainActor
     func didConnectToPeerSynchronously(_ peerID: PeerID) {
+        DesktopDebugCapture.shared.record(.connected, peerID: peerID)
         SecureLogger.debug("🤝 Peer connected: \(peerID)", category: .session)
 
         context.isConnected = true
@@ -291,6 +292,7 @@ final class ChatTransportEventCoordinator {
 
     @MainActor
     func didDisconnectFromPeerSynchronously(_ peerID: PeerID) {
+        DesktopDebugCapture.shared.record(.disconnected, peerID: peerID)
         SecureLogger.debug("👋 Peer disconnected: \(peerID)", category: .session)
 
         context.removeEphemeralSession(peerID: peerID)
@@ -439,6 +441,7 @@ private extension ChatTransportEventCoordinator {
             }
 
             let senderName = context.unifiedPeer(for: peerID)?.nickname ?? "Unknown"
+            DesktopDebugCapture.shared.record(.privateReceived, peerID: peerID)
             let mentions = context.parseMentions(from: packet.content)
             let message = BitchatMessage(
                 id: packet.messageID,
@@ -457,6 +460,7 @@ private extension ChatTransportEventCoordinator {
 
         case .delivered:
             guard let messageID = String(data: payload, encoding: .utf8) else { return }
+            DesktopDebugCapture.shared.record(.delivered, peerID: peerID)
 
             let name = deliveryStatusName(for: peerID, in: context)
             let didUpdate = context.applyAcknowledgedMessageDeliveryStatus(
@@ -475,6 +479,7 @@ private extension ChatTransportEventCoordinator {
 
         case .readReceipt:
             guard let messageID = String(data: payload, encoding: .utf8) else { return }
+            DesktopDebugCapture.shared.record(.read, peerID: peerID)
 
             let name = deliveryStatusName(for: peerID, in: context)
             let didUpdate = context.applyAcknowledgedMessageDeliveryStatus(

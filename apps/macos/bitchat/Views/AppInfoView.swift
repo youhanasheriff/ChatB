@@ -18,6 +18,9 @@ struct AppInfoView: View {
     /// Wipes all local data. Nil (previews, missing wiring) hides the danger
     /// zone entirely.
     var onPanicWipe: (@MainActor () -> Void)?
+    var debugModelProvider: (@MainActor () -> DesktopDebugModel)?
+    @ObservedObject private var debugSettings = DesktopDebugSettings.shared
+    @State private var showDebug = false
 
     @State private var showTopology = false
     @State private var liveVoiceEnabled = PTTSettings.liveVoiceEnabled
@@ -266,6 +269,11 @@ struct AppInfoView: View {
             .themedSheetBackground()
         }
         .frame(minWidth: 600, idealWidth: 640, minHeight: 520, idealHeight: 700)
+        .sheet(isPresented: $showDebug) {
+            if let debugModelProvider {
+                DesktopDebugView(model: debugModelProvider(), topologyProvider: topologyProvider)
+            }
+        }
         .sheet(isPresented: $showTopology) {
             if let topologyProvider {
                 MeshTopologyView(provider: topologyProvider)
@@ -549,6 +557,27 @@ struct AppInfoView: View {
                         }
                 }
             }
+
+            #if os(macOS)
+            if debugModelProvider != nil {
+                VStack(alignment: .leading, spacing: 12) {
+                    SectionHeader(verbatim: String(localized: "debug.section", defaultValue: "debugging"))
+                    settingsCard {
+                        settingToggle(
+                            title: Text(String(localized: "debug.mode", defaultValue: "Debug mode")),
+                            subtitle: Text(String(localized: "debug.mode_hint", defaultValue: "capture local connection and delivery events; stored in memory only")),
+                            isOn: Binding(get: { debugSettings.isEnabled }, set: { debugSettings.setEnabled($0) })
+                        )
+                        Button { showDebug = true } label: {
+                            Label(String(localized: "debug.open", defaultValue: "Debug settings"), systemImage: "ladybug")
+                                .bitchatFont(size: 12)
+                                .foregroundColor(palette.accent)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            #endif
 
             // Danger zone
             if onPanicWipe != nil {

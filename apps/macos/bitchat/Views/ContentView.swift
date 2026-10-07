@@ -432,7 +432,8 @@ struct ContentView: View {
         .sheet(isPresented: $appChromeModel.isAppInfoPresented) {
             AppInfoView(
                 topologyProvider: { appChromeModel.meshTopologyDisplayModel() },
-                onPanicWipe: { appChromeModel.panicClearAllData() }
+                onPanicWipe: { appChromeModel.panicClearAllData() },
+                debugModelProvider: { appChromeModel.makeDesktopDebugModel() }
             )
             .environmentObject(locationChannelsModel)
         }
