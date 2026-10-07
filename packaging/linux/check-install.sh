@@ -9,7 +9,10 @@ fi
 [[ "$(dpkg-deb -f "$package" Architecture)" == "$(dpkg --print-architecture)" ]]
 useradd --create-home --shell /bin/sh bitchat-package-test
 for attempt in 1 2; do
-  apt-get install -y --no-install-recommends --reinstall "$package"
+  # Ubuntu's minimal container excludes /usr/share/doc by default. Retain this
+  # package's docs so this isolated fixture checks the full desktop payload.
+  apt-get -o 'Dpkg::Options::=--path-include=/usr/share/doc/bitchat-desktop/*' \
+    install -y --no-install-recommends --reinstall "$package"
   [[ "$(dpkg-query -W -f='${Version}' bitchat-desktop)" == "$(dpkg-deb -f "$package" Version)" ]]
   test -x /usr/bin/bitchat-desktop
   test -f /usr/share/icons/hicolor/scalable/apps/com.bitchat.desktop.linux.svg
